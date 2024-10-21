@@ -7,11 +7,12 @@ import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
@@ -22,7 +23,7 @@ public class CsvQuestionDao implements QuestionDao {
     public List<Question> findAll() {
         String fileName = fileNameProvider.getTestFileName();
         InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
-        if (is == null) {
+        if (Objects.isNull(is)) {
             throw new QuestionReadException("CSV file not found: " + fileName);
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -32,6 +33,16 @@ public class CsvQuestionDao implements QuestionDao {
                 .withSkipLines(1)
                 .build()
                 .parse();
-        return list.stream().map(QuestionDto::toDomainObject).collect(Collectors.toList());
+        try {
+            is.close();
+        } catch (IOException e) {
+            throw new QuestionReadException("InputStream is null");
+        }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new QuestionReadException("BufferedReader is null");
+        }
+        return list.stream().map(QuestionDto::toDomainObject).toList();
     }
 }

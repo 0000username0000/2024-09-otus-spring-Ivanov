@@ -20,6 +20,5 @@ public class TestServiceImpl implements TestService {
             question.answers().forEach(answer -> ioService.printLine(answer.text()));
         });
         ioService.printLine("-----------------------------------");
-        // Получить вопросы из дао и вывести их с вариантами ответов
     }
 }
