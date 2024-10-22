@@ -21,7 +21,7 @@ class CsvQuestionDaoTest {
 
     @BeforeEach
     void setUp() {
-        testFileNameProvider = spy(TestFileNameProvider.class);
+        testFileNameProvider = mock(TestFileNameProvider.class);
         csvQuestionDao = new CsvQuestionDao(testFileNameProvider);
     }
 
@@ -30,6 +30,6 @@ class CsvQuestionDaoTest {
     void testFindAllReturnsQuestionsFromCsv() {
         when(testFileNameProvider.getTestFileName()).thenReturn("questionsTest.csv");
         List<Question> questions = csvQuestionDao.findAll();
-        Assertions.assertNotEquals(Collections.emptyList(), questions);
+        Assertions.assertFalse(questions.isEmpty(), "The list of questions should not be empty.");
     }
 }
