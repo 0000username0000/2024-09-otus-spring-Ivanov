@@ -25,18 +25,16 @@ public class TestServiceImpl implements TestService {
         for (var question: questions) {
             var isAnswerValid = false;
             ioService.printLine("-----------------------------------\n" + question.text() + "\n");
-            var count = new AtomicInteger(1);
-            question.answers().forEach(answer -> {
-                ioService.printLine(count + ". " + answer.text());
-                count.addAndGet(1);
-            });
+            for (int i = 0; i < question.answers().size(); i++) {
+                ioService.printLine((i + 1) + ". " + question.answers().get(i).text());
+            }
             int answerNumber = ioService
                     .readIntForRangeWithPrompt(
                             1,
                             question.answers().size(),
                             "-----------------------------------",
                             String.format("Invalid value. Please enter a number between %s and %s.",
-                                    1, count.addAndGet(-1)));
+                                    1, question.answers().size()));
             isAnswerValid = question.answers().get(answerNumber - 1).isCorrect();
             testResult.applyAnswer(question, isAnswerValid);
         }
