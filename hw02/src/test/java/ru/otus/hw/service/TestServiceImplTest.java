@@ -28,7 +28,6 @@ class TestServiceImplTest {
     private Student student;
 
     private Question question;
-    private int stringCount;
 
     @BeforeEach
     void setUp() {

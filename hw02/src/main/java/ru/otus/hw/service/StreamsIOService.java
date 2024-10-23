@@ -49,9 +49,7 @@ public class StreamsIOService implements IOService {
             try {
                 var stringValue = scanner.nextLine();
                 int intValue = Integer.parseInt(stringValue);
-                System.out.println(intValue + " " + min + " " + max);
                 if (intValue < min || intValue > max) {
-                    System.out.println("sdf");
                     throw new IllegalArgumentException();
                 }
                 return intValue;

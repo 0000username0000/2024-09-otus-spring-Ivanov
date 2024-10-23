@@ -38,7 +38,6 @@ public class TestServiceImpl implements TestService {
                             String.format("Invalid value. Please enter a number between %s and %s.",
                                     1, count.addAndGet(-1)));
             isAnswerValid = question.answers().get(answerNumber - 1).isCorrect();
-            ioService.printLine("-----------------------------------");
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
