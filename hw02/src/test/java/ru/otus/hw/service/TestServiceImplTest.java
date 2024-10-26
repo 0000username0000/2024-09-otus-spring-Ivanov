@@ -1,58 +1,44 @@
 package ru.otus.hw.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import ru.otus.hw.dao.QuestionDao;
-import ru.otus.hw.domain.Answer;
-import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
+import ru.otus.hw.config.TestFileNameProvider;
+import ru.otus.hw.dao.CsvQuestionDao;
 
-import java.util.Arrays;import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-class TestServiceImplTest {
+public class TestServiceImplTest {
 
     private TestServiceImpl testService;
-
-    @Mock
     private IOService ioService;
-
-    @Mock
-    private QuestionDao questionDao;
-
-    private Student student;
-
-    private Question question;
+    private TestFileNameProvider fileNameProvider;
 
     @BeforeEach
-    void setUp() {
-        ioService = mock(IOService.class);
-        questionDao = mock(QuestionDao.class);
+    public void setUp() {
+        ioService = Mockito.mock(IOService.class);
+        fileNameProvider = Mockito.mock(TestFileNameProvider.class);
+        QuestionDao questionDao = new CsvQuestionDao(fileNameProvider);
         testService = new TestServiceImpl(ioService, questionDao);
-        student = new Student("Name", "Surname");
-        question = new Question("Enter 2",
-                Arrays.asList(new Answer("1", false), new Answer("2", true)));
     }
 
-    @DisplayName("Verify print services and test resaults")
     @Test
-    void executeTestForTest() {
-
-        when(questionDao.findAll()).thenReturn(List.of(question));
+    public void testExecuteTestFor() {
+        when(fileNameProvider.getTestFileName()).thenReturn("questionsTest.csv");
         when(ioService.readIntForRangeWithPrompt(anyInt(), anyInt(), anyString(), anyString()))
-                .thenReturn(2);
+                .thenReturn(1, 1, 3);
+
+        Student student = new Student("Name","Surname");
 
         TestResult result = testService.executeTestFor(student);
 
-        assertNotNull(result);
-        assertEquals(1, result.getRightAnswersCount());
-        verify(ioService, atLeastOnce()).printLine(anyString());
-        verify(ioService, atLeastOnce()).printFormattedLine(anyString());
-        verify(ioService, times(1)).readIntForRangeWithPrompt(anyInt(), anyInt(), anyString(), anyString());
+        assertThat(result.getStudent()).isEqualTo(student);
+        assertThat(result.getRightAnswersCount()).isEqualTo(3);
     }
 }
