@@ -6,11 +6,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.domain.Question;
+import ru.otus.hw.exceptions.QuestionReadException;
 
-import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 
 class CsvQuestionDaoTest {
@@ -32,4 +35,15 @@ class CsvQuestionDaoTest {
         List<Question> questions = csvQuestionDao.findAll();
         Assertions.assertFalse(questions.isEmpty(), "The list of questions should not be empty.");
     }
+
+
+    @Test
+    public void testFindAllFileNotFound() {
+        when(testFileNameProvider.getTestFileName()).thenReturn("non-existent-file.csv");
+
+        assertThatThrownBy(() -> csvQuestionDao.findAll())
+                .isInstanceOf(QuestionReadException.class)
+                .hasMessageContaining("CSV file not found: non-existent-file.csv");
+    }
 }
+
