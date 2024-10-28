@@ -32,13 +32,13 @@ public class TestServiceImplTest {
     public void testExecuteTestFor() {
         when(fileNameProvider.getTestFileName()).thenReturn("questionsTest.csv");
         when(ioService.readIntForRangeWithPrompt(anyInt(), anyInt(), anyString(), anyString()))
-                .thenReturn(1, 1, 3);
+                .thenReturn(1, 1, 3, 1, 4);
 
         Student student = new Student("Name","Surname");
 
         TestResult result = testService.executeTestFor(student);
 
         assertThat(result.getStudent()).isEqualTo(student);
-        assertThat(result.getRightAnswersCount()).isEqualTo(3);
+        assertThat(result.getRightAnswersCount()).isEqualTo(5);
     }
 }

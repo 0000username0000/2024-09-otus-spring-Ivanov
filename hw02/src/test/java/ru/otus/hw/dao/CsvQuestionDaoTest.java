@@ -37,6 +37,7 @@ class CsvQuestionDaoTest {
     }
 
 
+    @DisplayName("Should return file not found exception")
     @Test
     public void testFindAllFileNotFound() {
         when(testFileNameProvider.getTestFileName()).thenReturn("non-existent-file.csv");
