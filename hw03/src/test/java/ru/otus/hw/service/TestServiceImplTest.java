@@ -32,7 +32,7 @@ public class TestServiceImplTest {
     @Test
     public void testExecuteTestFor() {
         when(fileNameProvider.getTestFileName()).thenReturn("questionsTest.csv");
-        when(ioService.readIntForRangeWithPrompt(anyInt(), anyInt(), anyString(), anyString()))
+        when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString()))
                 .thenReturn(1, 1, 3, 1, 4);
 
         Student student = new Student("Name","Surname");
