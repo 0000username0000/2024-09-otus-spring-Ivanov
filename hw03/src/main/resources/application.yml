@@ -7,7 +7,7 @@ spring:
     fallbackToSystemLocale: false
 
 test:
-  rightAnswersCountToPass: 3
+  rightAnswersCountToPass: 5
   locale: ru-RU
   fileNameByLocaleTag:
     ru-RU: questions_ru.csv
