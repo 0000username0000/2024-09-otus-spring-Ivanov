@@ -2,7 +2,6 @@ package ru.otus.hw.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
@@ -13,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 
 
 public class TestServiceImplTest {
@@ -23,8 +23,8 @@ public class TestServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        ioService = Mockito.mock(LocalizedIOService.class);
-        fileNameProvider = Mockito.mock(TestFileNameProvider.class);
+        ioService = mock(LocalizedIOService.class);
+        fileNameProvider = mock(TestFileNameProvider.class);
         QuestionDao questionDao = new CsvQuestionDao(fileNameProvider);
         testService = new TestServiceImpl(ioService, questionDao);
     }
