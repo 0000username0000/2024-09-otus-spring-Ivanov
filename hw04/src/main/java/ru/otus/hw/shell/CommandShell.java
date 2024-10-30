@@ -20,9 +20,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CommandShell {
     private List<Question> questions;
+
     private TestResult testResult;
+
     private final StreamsIOService ioService;
+
     private final QuestionDao questionDao;
+
     private final ResultService resultService;
 
     @ShellMethod(value = "Start of testing", key = "start")
@@ -68,6 +72,7 @@ public class CommandShell {
         return Objects.nonNull(testResult) ? Availability.available()
                 : Availability.unavailable(". Please enter 'start'");
     }
+
     private Availability isFinishAvailable() {
         return Objects.nonNull(questions) ? Availability.available()
                 : Availability.unavailable(". Please enter 'testing'");
