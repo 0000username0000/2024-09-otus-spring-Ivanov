@@ -5,10 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.otus.hw.config.LocaleConfig;
+import ru.otus.hw.config.TestConfig;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 import ru.otus.hw.config.TestFileNameProvider;
+
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -26,6 +30,12 @@ public class TestServiceImplTest {
     @MockBean
     private TestFileNameProvider fileNameProvider;
 
+    @MockBean
+    private LocaleConfig localeConfig;
+
+    @MockBean
+    private TestConfig testConfig;
+
 
 
     @BeforeEach
@@ -33,6 +43,8 @@ public class TestServiceImplTest {
         when(fileNameProvider.getTestFileName()).thenReturn("questions_test.csv");
         when(ioService.readIntForRangeWithPromptLocalized(anyInt(), anyInt(), anyString(), anyString()))
                 .thenReturn(1, 1, 3, 1, 4);
+        when(localeConfig.getLocale()).thenReturn(Locale.getDefault());
+        when(testConfig.getRightAnswersCountToPass()).thenReturn(5);
         testService = new TestServiceImpl(ioService, questionDao);
     }
 
