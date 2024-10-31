@@ -25,27 +25,19 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Question> findAll() {
         String fileName = fileNameProvider.getTestFileName();
-        InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
-        if (Objects.isNull(is)) {
-            throw new QuestionReadException("CSV file not found: " + fileName);
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        List<QuestionDto> list = new CsvToBeanBuilder<QuestionDto>(reader)
-                .withType(QuestionDto.class)
-                .withSeparator(';')
-                .withSkipLines(1)
-                .build()
-                .parse();
-        try {
-            is.close();
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)))) {
+            List<QuestionDto> list = new CsvToBeanBuilder<QuestionDto>(reader)
+                    .withType(QuestionDto.class)
+                    .withSeparator(';')
+                    .withSkipLines(1)
+                    .build()
+                    .parse();
+            return list.stream().map(QuestionDto::toDomainObject).toList();
         } catch (IOException e) {
-            throw new QuestionReadException("InputStream is null");
+            throw new QuestionReadException("File read error: " + fileName, e);
+        } catch (NullPointerException e) {
+            throw new QuestionReadException("CSV file not found: " + fileName, e);
         }
-        try {
-            reader.close();
-        } catch (IOException e) {
-            throw new QuestionReadException("BufferedReader is null");
-        }
-        return list.stream().map(QuestionDto::toDomainObject).toList();
     }
 }
