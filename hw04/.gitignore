@@ -15,6 +15,11 @@ dependency-reduced-pom.xml
 *.iws
 *.iml
 *.ipr
+.mvn
+.gitattributes
+HELP.md
+mvnw
+mvnw.cmd
 
 ### NetBeans ###
 /nbproject/private/
