@@ -20,6 +20,7 @@ dependency-reduced-pom.xml
 HELP.md
 mvnw
 mvnw.cmd
+spring-shell.log
 
 ### NetBeans ###
 /nbproject/private/
