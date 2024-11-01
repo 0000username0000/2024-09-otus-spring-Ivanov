@@ -35,7 +35,6 @@ class CsvQuestionDaoTest {
     @MockBean
     private TestConfig testConfig;
 
-
     @BeforeEach
     void setUp() {
 
