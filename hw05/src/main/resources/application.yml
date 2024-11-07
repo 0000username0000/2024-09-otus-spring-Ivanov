@@ -1,8 +1,15 @@
 spring:
   datasource:
     url: jdbc:h2:mem:maindb
+    username: user
+    password: user
   sql:
     init:
       mode: always
       data-locations: data.sql
       schema-locations: schema.sql
+  h2:
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
