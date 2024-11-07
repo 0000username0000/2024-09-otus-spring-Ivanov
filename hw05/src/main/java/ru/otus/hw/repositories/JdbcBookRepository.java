@@ -2,10 +2,12 @@ package ru.otus.hw.repositories;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
@@ -21,9 +23,12 @@ public class JdbcBookRepository implements BookRepository {
 
     private final GenreRepository genreRepository;
 
+    private final JdbcOperations jdbc;
+
     @Override
     public Optional<Book> findById(long id) {
-        return Optional.empty();
+        return Optional.ofNullable(jdbc
+                .queryForObject("select id, title, author_id from books where id = ?", new BookRowMapper(), id));
     }
 
     @Override
@@ -45,11 +50,14 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        //...
+        jdbc.update("delete from bookse where id = ?", id);
     }
 
     private List<Book> getAllBooksWithoutGenres() {
-        return new ArrayList<>();
+//        return jdbc.query("select b.id, b.title, b.author_id from books b" +
+//                "left join books_geners bg on bg.book_id = b.id" +
+//                "where bg.id is null", new BookRowMapper());
+        return jdbc.query("select id, title, author_id from books", new BookRowMapper());
     }
 
     private List<BookGenreRelation> getAllGenreRelations() {
@@ -63,8 +71,8 @@ public class JdbcBookRepository implements BookRepository {
 
     private Book insert(Book book) {
         var keyHolder = new GeneratedKeyHolder();
-
-        //...
+        jdbc.update("insert into books (title, author_id) values (?, ?)",
+                book.getTitle(), book.getAuthor().getId());
 
         //noinspection DataFlowIssue
         book.setId(keyHolder.getKeyAs(Long.class));
@@ -94,7 +102,10 @@ public class JdbcBookRepository implements BookRepository {
 
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return null;
+            long id = rs.getLong("id");
+            String title = rs.getString("title");
+            Author authorId = rs.getObject("author_id", Author.class);
+            return new Book(id, title, authorId, null);
         }
     }
 
