@@ -1,7 +1,9 @@
 package ru.otus.hw.repositories;
 
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.commands.AuthorCommands;
 import ru.otus.hw.models.Author;
 
 import java.sql.ResultSet;
@@ -13,21 +15,30 @@ import java.util.Optional;
 @Repository
 public class JdbcAuthorRepository implements AuthorRepository {
 
+    private final JdbcOperations jdbc;
+
+    public JdbcAuthorRepository(JdbcOperations jdbc) {
+        this.jdbc = jdbc;
+    }
+
     @Override
     public List<Author> findAll() {
-        return new ArrayList<>();
+        return jdbc.query("select id, full_name from authors", new AuthorRowMapper());
     }
 
     @Override
     public Optional<Author> findById(long id) {
-        return Optional.empty();
+        return Optional.ofNullable(jdbc.queryForObject(
+                "select id, full_name from authors where id = ?", new AuthorRowMapper(), id));
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {
 
         @Override
         public Author mapRow(ResultSet rs, int i) throws SQLException {
-            return null;
+            long id = rs.getLong("id");
+            String name = rs.getString("full_name");
+            return new Author(id, name);
         }
     }
 }
