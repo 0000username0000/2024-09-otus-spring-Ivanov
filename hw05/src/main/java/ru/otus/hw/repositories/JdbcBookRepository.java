@@ -78,27 +78,62 @@ public class JdbcBookRepository implements BookRepository {
         });
     }
 
+//    private void mergeBooksInfo(List<Book> booksWithoutGenres, List<Genre> genres,
+//                                List<BookGenreRelation> relations) {
+//        Map<Long, Genre> genreMap = new HashMap<>();
+//        genres.forEach(e -> genreMap.put(e.getId(), e));
+//        Map<Long, List<Long>> bookGenreRelations = new HashMap<>();
+//        relations.forEach(relation -> bookGenreRelations
+//                .computeIfAbsent(relation.bookId(), k -> new ArrayList<>())
+//                .add(relation.genreId()));
+//        booksWithoutGenres.forEach(book -> {
+//            List<Long> genreIds = bookGenreRelations.get(book.getId());
+//            if (genreIds != null) {
+//                List<Genre> genreList = new ArrayList<>();
+//                genreIds.forEach(genreId -> {
+//                    Genre genre = genreMap.get(genreId);
+//                    if (genre != null) {
+//                        genreList.add(genre);
+//                    }
+//                });
+//                book.setGenres(genreList);
+//            }
+//        });
+//    }
+
     private void mergeBooksInfo(List<Book> booksWithoutGenres, List<Genre> genres,
                                 List<BookGenreRelation> relations) {
+        Map<Long, Genre> genreMap = createGenreMap(genres);
+        Map<Long, List<Long>> bookGenreRelations = createBookGenreRelationsMap(relations);
+        booksWithoutGenres.forEach(book ->
+                assignGenresToBook(book, bookGenreRelations.get(book.getId()), genreMap)
+        );
+    }
+
+    private Map<Long, Genre> createGenreMap(List<Genre> genres) {
         Map<Long, Genre> genreMap = new HashMap<>();
-        genres.forEach(e -> genreMap.put(e.getId(), e));
+        genres.forEach(genre -> genreMap.put(genre.getId(), genre));
+        return genreMap;
+    }
+
+    private Map<Long, List<Long>> createBookGenreRelationsMap(List<BookGenreRelation> relations) {
         Map<Long, List<Long>> bookGenreRelations = new HashMap<>();
-        relations.forEach(relation -> bookGenreRelations
-                .computeIfAbsent(relation.bookId(), k -> new ArrayList<>())
-                .add(relation.genreId()));
-        booksWithoutGenres.forEach(book -> {
-            List<Long> genreIds = bookGenreRelations.get(book.getId());
-            if (genreIds != null) {
-                List<Genre> genreList = new ArrayList<>();
-                genreIds.forEach(genreId -> {
-                    Genre genre = genreMap.get(genreId);
-                    if (genre != null) {
-                        genreList.add(genre);
-                    }
-                });
-                book.setGenres(genreList);
-            }
-        });
+        relations.forEach(relation ->
+                bookGenreRelations.computeIfAbsent(relation.bookId(), k -> new ArrayList<>())
+                        .add(relation.genreId())
+        );
+        return bookGenreRelations;
+    }
+
+    private void assignGenresToBook(Book book, List<Long> genreIds, Map<Long, Genre> genreMap) {
+        if (genreIds != null) {
+            List<Genre> genreList = new ArrayList<>();
+            genreIds.stream()
+                    .map(genreMap::get)
+                    .filter(genre -> genre != null)
+                    .forEach(genreList::add);
+            book.setGenres(genreList);
+        }
     }
 
     private Book insert(Book book) {
