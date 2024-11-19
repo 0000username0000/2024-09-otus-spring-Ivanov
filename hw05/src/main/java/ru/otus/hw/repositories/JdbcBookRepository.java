@@ -29,7 +29,6 @@ public class JdbcBookRepository implements BookRepository {
 
     private final JdbcOperations jdbc;
 
-
     @Override
     public Optional<Book> findById(long id) {
         return Optional
