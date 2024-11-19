@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -29,16 +30,19 @@ public class JdbcBookRepository implements BookRepository {
 
     private final JdbcOperations jdbc;
 
+    private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
     @Override
     public Optional<Book> findById(long id) {
         return Optional
-                .ofNullable(jdbc.query("SELECT b.id, b.title, b.author_id, a.full_name, bg.genre_id, g.name " +
+                .ofNullable(namedParameterJdbcOperations.query(
+                                    "SELECT b.id, b.title, b.author_id, a.full_name, bg.genre_id, g.name " +
                                             "FROM books b " +
                                             "JOIN authors a ON a.id = b.author_id " +
                                             "JOIN books_genres bg ON bg.book_id = b.id " +
                                             "JOIN genres g ON g.id = bg.genre_id " +
-                                            "WHERE b.id = ?",
-                        new BookResultSetExtractor(), id));
+                                            "WHERE b.id = :id", Collections.singletonMap("id", id),
+                        new BookResultSetExtractor()));
     }
 
     @Override
@@ -60,7 +64,7 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        jdbc.update("DELETE FROM books WHERE id = ?", id);
+        namedParameterJdbcOperations.update("DELETE FROM books WHERE id = :id", Collections.singletonMap("id", id));
     }
 
     private List<Book> getAllBooksWithoutGenres() {
@@ -128,8 +132,11 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private Book update(Book book) {
-        jdbc.update("UPDATE books SET title = ?, author_id = ? WHERE id = ?",
-                book.getTitle(), book.getAuthor().getId(), book.getId());
+        namedParameterJdbcOperations.update(
+                "UPDATE books SET title = :title, author_id = :authorId WHERE id = :bookId",
+                Map.of("title", book.getTitle(),
+                        "authorId", book.getAuthor().getId(),
+                        "bookId", book.getId()));
         try {
             removeGenresRelationsFor(book);
             batchInsertGenresRelationsFor(book);
@@ -146,7 +153,8 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private void removeGenresRelationsFor(Book book) {
-        jdbc.update("DELETE FROM books_genres WHERE book_id = ?", book.getId());
+        namedParameterJdbcOperations.update("DELETE FROM books_genres WHERE book_id = :id",
+                Collections.singletonMap("id",book.getId()));
     }
 
     private static class BookRowMapper implements RowMapper<Book> {
