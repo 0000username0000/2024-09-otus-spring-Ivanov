@@ -1,5 +1,6 @@
 package ru.otus.hw.repositories;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,13 +12,10 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcGenreRepository implements GenreRepository {
 
     private final JdbcOperations jdbc;
-
-    public JdbcGenreRepository(JdbcOperations jdbc) {
-        this.jdbc = jdbc;
-    }
 
     @Override
     public List<Genre> findAll() {
