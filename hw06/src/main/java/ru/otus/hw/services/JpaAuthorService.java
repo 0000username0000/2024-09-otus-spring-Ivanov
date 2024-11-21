@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Author;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
 
 import java.util.List;
@@ -30,5 +31,15 @@ public class JpaAuthorService implements AuthorRepository {
     @Override
     public Optional<Author> findById(long id) {
         return Optional.ofNullable(entityManager.find(Author.class, id));
+    }
+
+    @Transactional
+    @Override
+    public Author save(Author author) {
+        if (author.getId() == 0) {
+            entityManager.persist(author);
+            return author;
+        }
+        return entityManager.merge(author);
     }
 }
