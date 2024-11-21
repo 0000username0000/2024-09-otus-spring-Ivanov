@@ -31,7 +31,7 @@ public class BookService implements BookRepository {
     @Transactional(readOnly = true)
     @Override
     public List<Book> findAll() {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("books-with-author-and-genres");
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("books-with-author-genres-comments");
         TypedQuery<Book> typedQuery = entityManager.createQuery("select e from Book e order by e.title", Book.class);
         return typedQuery.setHint(FETCH.getKey(), entityGraph).getResultList();
     }

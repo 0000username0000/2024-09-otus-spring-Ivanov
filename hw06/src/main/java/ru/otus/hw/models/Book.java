@@ -27,8 +27,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "BOOK")
-@NamedEntityGraph(name = "books-with-author-and-genres",
-        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genres")})
+@NamedEntityGraph(name = "books-with-author-genres-comments",
+        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genres"),
+                @NamedAttributeNode("comments")})
 public class Book {
 
     @Id
