@@ -14,7 +14,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Service
-public class JpaGenreService implements GenreRepository {
+public class GenreService implements GenreRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;

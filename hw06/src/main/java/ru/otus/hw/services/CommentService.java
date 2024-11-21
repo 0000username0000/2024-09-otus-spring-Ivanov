@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class JpaCommentService implements CommentRepository {
+public class CommentService implements CommentRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;

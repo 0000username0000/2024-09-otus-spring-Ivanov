@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class JpaBookService implements BookRepository {
+public class BookService implements BookRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;
