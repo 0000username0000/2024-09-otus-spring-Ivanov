@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,9 @@ public class JpaAuthorService implements AuthorRepository {
     @Transactional(readOnly = true)
     @Override
     public List<Author> findAll() {
-        return entityManager.createQuery("select e from Author e order by e.fullName", Author.class).getResultList();
+        TypedQuery<Author> typedQuery = entityManager
+                .createQuery("select e from Author e order by e.fullName", Author.class);
+        return typedQuery.getResultList();
     }
 
     @Override

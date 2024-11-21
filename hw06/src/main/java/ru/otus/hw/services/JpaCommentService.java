@@ -2,10 +2,10 @@ package ru.otus.hw.services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.CommentRepository;
 
@@ -41,7 +41,8 @@ public class JpaCommentService implements CommentRepository {
 
     @Override
     public List<Comment> findByBookId(long bookId) {
-        return entityManager.createQuery("select e from Comment e where e.book.id = :bookId", Comment.class)
-                .setParameter("bookId", bookId).getResultList();
+        TypedQuery<Comment> typedQuery = entityManager
+                .createQuery("select e from Comment e where e.book.id = :bookId", Comment.class);
+        return typedQuery.setParameter("bookId", bookId).getResultList();
     }
 }

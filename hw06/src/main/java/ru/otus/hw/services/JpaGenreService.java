@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +22,16 @@ public class JpaGenreService implements GenreRepository {
     @Transactional(readOnly = true)
     @Override
     public List<Genre> findAll() {
-        return entityManager.createQuery("select e from Genre e order by e.name", Genre.class).getResultList();
+        TypedQuery<Genre> typedQuery = entityManager
+                .createQuery("select e from Genre e order by e.name", Genre.class);
+        return typedQuery.getResultList();
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<Genre> findAllByIds(Set<Long> ids) {
-        return entityManager.createQuery("select e from Genre where e.id in :Ids", Genre.class)
-                .setParameter("Ids", ids).getResultList();
+        TypedQuery<Genre> typedQuery = entityManager
+                .createQuery("select e from Genre where e.id in :Ids", Genre.class);
+        return typedQuery.setParameter("Ids", ids).getResultList();
     }
 }
