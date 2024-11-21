@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class JdbcGenreRepository implements GenreRepository {
@@ -19,8 +19,8 @@ public class JdbcGenreRepository implements GenreRepository {
     }
 
     @Override
-    public Optional<Genre> findById(long id) {
-        return Optional.empty();
+    public List<Genre> findAllByIds(Set<Long> ids) {
+        return new ArrayList<>();
     }
 
     private static class GnreRowMapper implements RowMapper<Genre> {
