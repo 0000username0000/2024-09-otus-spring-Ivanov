@@ -21,34 +21,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "BOOK")
-@NamedEntityGraph(name = "books-with-author-genres-comments",
-        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genres"),
-                @NamedAttributeNode("comments")})
+@NamedEntityGraph(name = "book-with-author",
+        attributeNodes = {@NamedAttributeNode("author")})
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     private Author author;
 
     @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
-            name = "books_genres", joinColumns = @JoinColumn(name = "genre_id"),
+            name = "books_genres",
+            joinColumns = @JoinColumn(name = "genre_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     private List<Genre> genres;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "book")
+    @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "book")
     private List<Comment> comments;
 }

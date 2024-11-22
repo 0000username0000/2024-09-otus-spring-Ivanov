@@ -1,14 +1,13 @@
-insert into authors(full_name)
-values ('Author_1'), ('Author_2'), ('Author_3');
+insert into author(full_name)
+values ('author1'), ('author2'), ('author3'), ('author4'), ('author5');
 
-insert into genres(name)
-values ('Genre_1'), ('Genre_2'), ('Genre_3'),
-       ('Genre_4'), ('Genre_5'), ('Genre_6');
+insert into genre(name)
+values ('genre1'), ('genre2'), ('genre3'), ('genre4'), ('genre5'), ('genre6'), ('genre7'), ('genre8'),
+       ('genre9'), ('genre10'), ('genre11'), ('genre12'), ('genre13'), ('genre14'), ('genre15'), ('genre16');
 
-insert into books(title, author_id)
-values ('BookTitle_1', 1), ('BookTitle_2', 2), ('BookTitle_3', 3);
+insert into book(title, author_id)
+values ('book1', 1), ('book2', 2), ('book3', 2), ('book4', 2),
+       ('genre5', 3), ('genre6', 4), ('genre7', 3), ('genre8', 5);
 
-insert into books_genres(book_id, genre_id)
-values (1, 1),   (1, 2),
-       (2, 3),   (2, 4),
-       (3, 5),   (3, 6);
+insert into books_genres(genre_id, book_id)
+values (1, 1), (1, 2), (1, 3), (2, 1), (3, 1), (4, 5), (4, 6), (4, 7), (5, 7), (6, 8), (7, 8), (8, 8);
