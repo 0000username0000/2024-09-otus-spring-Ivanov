@@ -18,12 +18,12 @@ public class BookServiceTest {
     private BookService bookService;
     @Autowired
     private TestEntityManager testEntityManager;
-    private static final long FIRST_STUDENT_ID = 1L;
+    private static final long FIRST_BOOK_ID = 1L;
 
     @Test
     void shouldFindExpectedBookById() {
-       val optionalBook = bookService.findById(FIRST_STUDENT_ID);
-       val expectedBook = testEntityManager.find(Book.class, FIRST_STUDENT_ID);
+       val optionalBook = bookService.findById(FIRST_BOOK_ID);
+       val expectedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
        assertThat(optionalBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
     }
 }
