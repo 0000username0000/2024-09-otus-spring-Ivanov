@@ -7,12 +7,14 @@ import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.BookRepository;
 
 import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -51,6 +53,11 @@ public class BookService implements BookRepository {
     @Transactional
     @Override
     public void deleteById(long id) {
-        entityManager.remove(findById(id));
+        var book = findById(id);
+        if (book.isPresent()) {
+            entityManager.remove(book.get());
+        } else {
+            throw new EntityNotFoundException(String.format("Book not found with id = %s", id));
+        }
     }
 }
