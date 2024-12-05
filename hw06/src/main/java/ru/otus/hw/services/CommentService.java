@@ -10,6 +10,7 @@ import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,8 +21,8 @@ public class CommentService implements CommentRepository {
 
     @Transactional(readOnly = true)
     @Override
-    public Comment findById(long id) {
-        return entityManager.find(Comment.class, id);
+    public Optional<Comment>findById(long id) {
+        return Optional.ofNullable(entityManager.find(Comment.class, id));
     }
 
     @Transactional

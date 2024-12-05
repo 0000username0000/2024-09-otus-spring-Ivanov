@@ -71,7 +71,6 @@ public class BookServiceTest {
     void shouldDeleteById() {
         val book = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(book).isNotNull();
-        System.out.println(book.getTitle() + " " + book.getId());
         bookService.deleteById(FIRST_BOOK_ID);
         val deletedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(deletedBook).isNull();
