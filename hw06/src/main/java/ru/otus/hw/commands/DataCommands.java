@@ -13,7 +13,9 @@ import ru.otus.hw.services.GenreService;
 public class DataCommands {
 
     private final AuthorService authorService;
+    
     private final GenreService genreService;
+
     public void addAuthor() {
         for (int i = 0; i <= 5; i++) {
             Author author = new Author();

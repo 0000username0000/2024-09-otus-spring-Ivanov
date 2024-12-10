@@ -14,7 +14,6 @@ import ru.otus.hw.repositories.BookRepository;
 import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
