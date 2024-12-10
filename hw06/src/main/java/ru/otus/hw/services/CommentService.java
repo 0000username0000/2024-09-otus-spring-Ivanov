@@ -1,6 +1,7 @@
 package ru.otus.hw.services;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,7 +39,11 @@ public class CommentService implements CommentRepository {
 
     @Override
     public void deleteById(long id) {
-        entityManager.remove(findById(id));
+        if (findById(id).isPresent()) {
+            entityManager.remove(findById(id).get());
+        } else {
+            throw new EntityNotFoundException(String.format("Comment not found. id=%s", id));
+        }
     }
 
     @Override
