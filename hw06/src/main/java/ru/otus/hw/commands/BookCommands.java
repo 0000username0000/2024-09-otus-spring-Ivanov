@@ -24,12 +24,12 @@ public class BookCommands {
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
-    @ShellMethod(value = "Find book by id", key = "bbid")
-    public String findBookById(long id) {
-        return bookService.findById(id)
-                .map(bookConverter::bookToString)
-                .orElse("Book with id %d not found".formatted(id));
-    }
+//    @ShellMethod(value = "Find book by id", key = "bbid")
+//    public String findBookById(long id) {
+//        return bookService.findById(id)
+//                .map(bookConverter::bookToString)
+//                .orElse("Book with id %d not found".formatted(id));
+//    }
 
 //    // bins newBook 1 1,6
 //    @ShellMethod(value = "Insert book", key = "bins")

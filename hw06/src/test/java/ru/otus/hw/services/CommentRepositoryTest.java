@@ -9,12 +9,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
+import ru.otus.hw.repositories.JpaCommentRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(CommentService.class)
-public class CommentServiceTest {
+@Import(JpaCommentRepository.class)
+public class CommentRepositoryTest {
 
     private static final long FIRST_COMMENT_ID = 1L;
     private static final long BOOK_ID = 2L;
@@ -22,7 +23,7 @@ public class CommentServiceTest {
     @Autowired
     TestEntityManager testEntityManager;
     @Autowired
-    CommentService commentService;
+    JpaCommentRepository commentRepository;
 
     @BeforeEach
     void setUp() {
@@ -32,7 +33,7 @@ public class CommentServiceTest {
 
     @Test
     void shouldFindExpectedCommentById() {
-        val optionalComment = commentService.findById(FIRST_COMMENT_ID);
+        val optionalComment = commentRepository.findById(FIRST_COMMENT_ID);
         val expectedComment = testEntityManager.find(Comment.class, FIRST_COMMENT_ID);
         assertThat(optionalComment).isPresent().get().usingRecursiveComparison().isEqualTo(expectedComment);
     }
@@ -42,7 +43,7 @@ public class CommentServiceTest {
         newComment.setText("New Comment");
         Book book = testEntityManager.find(Book.class, BOOK_ID);
         newComment.setBook(book);
-        commentService.save(newComment);
+        commentRepository.save(newComment);
         assertThat(newComment.getId()).isGreaterThan(0);
         val savedComment = testEntityManager.find(Comment.class, newComment.getId());
         assertThat(savedComment).isNotNull();
@@ -53,14 +54,14 @@ public class CommentServiceTest {
     void shouldDeleteById() {
         val comment = testEntityManager.find(Comment.class, FIRST_COMMENT_ID);
         assertThat(comment).isNotNull();
-        commentService.deleteById(FIRST_COMMENT_ID);
+        commentRepository.deleteById(FIRST_COMMENT_ID);
         val deletedComment = testEntityManager.find(Comment.class, FIRST_COMMENT_ID);
         assertThat(deletedComment).isNull();
     }
 
     @Test
     void shouldFindCommentsByBookId() {
-        val comments = commentService.findByBookId(BOOK_ID);
+        val comments = commentRepository.findByBookId(BOOK_ID);
         assertThat(comments.size()).isEqualTo(3);
     }
 }

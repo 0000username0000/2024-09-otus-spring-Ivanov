@@ -8,40 +8,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.GenreRepository;
+import ru.otus.hw.repositories.JpaGenreRepository;
 
 import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
 @Service
-public class GenreService implements GenreRepository {
+public class GenreService {
 
-    @PersistenceContext
-    private final EntityManager entityManager;
+    private final JpaGenreRepository genreRepository;
 
     @Transactional(readOnly = true)
-    @Override
     public List<Genre> findAll() {
-        TypedQuery<Genre> typedQuery = entityManager
-                .createQuery("select e from Genre e order by e.name", Genre.class);
-        return typedQuery.getResultList();
+        return genreRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    @Override
     public List<Genre> findAllByIds(Set<Long> ids) {
-        TypedQuery<Genre> typedQuery = entityManager
-                .createQuery("select e from Genre where e.id in :Ids", Genre.class);
-        return typedQuery.setParameter("Ids", ids).getResultList();
+        return genreRepository.findAllByIds(ids);
     }
 
     @Transactional
-    @Override
     public Genre save(Genre genre) {
-        if (genre.getId() == 0) {
-            entityManager.persist(genre);
-            return genre;
-        }
-        return entityManager.merge(genre);
+        return genreRepository.save(genre);
     }
 }

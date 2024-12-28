@@ -8,15 +8,16 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Book;
+import ru.otus.hw.repositories.JpaBookRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(BookService.class)
-public class BookServiceTest {
+@Import(JpaBookRepository.class)
+public class BookRepositoryTest {
 
     @Autowired
-    private BookService bookService;
+    private JpaBookRepository bookRepository;
     @Autowired
     private TestEntityManager testEntityManager;
 
@@ -27,7 +28,7 @@ public class BookServiceTest {
 
     @Test
     void shouldFindExpectedBookById() {
-       val optionalBook = bookService.findById(FIRST_BOOK_ID);
+       val optionalBook = bookRepository.findById(FIRST_BOOK_ID);
        val expectedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
        assertThat(optionalBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
     }
@@ -39,7 +40,7 @@ public class BookServiceTest {
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
         System.out.println("\n\n\n\n----------------------------------------------------------------------------------------------------------");
-        val books = bookService.findAll();
+        val books = bookRepository.findAll();
         assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
                 .allMatch(s -> !s.getTitle().isEmpty())
                 .allMatch(s -> s.getGenres() != null && !s.getGenres().isEmpty())
@@ -53,7 +54,7 @@ public class BookServiceTest {
         val book = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         String title = book.getTitle();
         book.setTitle(NEW_TITLE_BOOK);
-        bookService.save(book);
+        bookRepository.save(book);
         val updateBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(updateBook.getTitle()).isNotEqualTo(title).isEqualTo(NEW_TITLE_BOOK);
     }
@@ -63,7 +64,7 @@ public class BookServiceTest {
         val newBook = new Book();
         newBook.setTitle("New Title");
         newBook.setId(0);
-        bookService.save(newBook);
+        bookRepository.save(newBook);
         assertThat(newBook.getId()).isGreaterThan(0);
     }
 
@@ -71,7 +72,7 @@ public class BookServiceTest {
     void shouldDeleteById() {
         val book = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(book).isNotNull();
-        bookService.deleteById(FIRST_BOOK_ID);
+        bookRepository.deleteById(FIRST_BOOK_ID);
         val deletedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(deletedBook).isNull();
     }
