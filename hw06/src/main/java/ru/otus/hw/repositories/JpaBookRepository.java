@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
 @Repository
-public class JpaBookRepository implements BookRepository{
+public class JpaBookRepository implements BookRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;
