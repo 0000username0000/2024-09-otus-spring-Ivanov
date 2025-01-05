@@ -1,13 +1,9 @@
 package ru.otus.hw.services;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.GenreRepository;
 import ru.otus.hw.repositories.JpaGenreRepository;
 
 import java.util.List;
