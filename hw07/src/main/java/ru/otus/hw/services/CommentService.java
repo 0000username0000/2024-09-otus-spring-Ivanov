@@ -13,7 +13,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CommentService {
 
-    CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional(readOnly = true)
     public Optional<Comment>findById(long id) {
