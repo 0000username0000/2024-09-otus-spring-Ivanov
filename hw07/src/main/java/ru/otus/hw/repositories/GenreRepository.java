@@ -8,6 +8,6 @@ import java.util.Set;
 
 public interface GenreRepository extends JpaRepository<Genre, Long> {
 
-    List<Genre> findByIds(Set<Long> ids);
+    List<Genre> findByIdIn(Set<Long> ids);
 
 }

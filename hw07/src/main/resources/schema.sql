@@ -30,21 +30,21 @@
       );
 
       alter table if exists book
-         add constraint FKklnrv3weler2ftkweewlky958
+         add constraint fk_book_author
          foreign key (author_id)
          references author;
 
       alter table if exists books_genres
-         add constraint FK74hohmy8rprauuhhbbdmx9vh9
+         add constraint fk_books_genres_book
          foreign key (book_id)
          references genre;
 
       alter table if exists books_genres
-         add constraint FKxg2rd31w1guudd4ox0kfin3p
+         add constraint fk_books_genres_genre
          foreign key (genre_id)
          references book;
 
       alter table if exists comment
-         add constraint FKkko96rdq8d82wm91vh2jsfak7
+         add constraint fk_comment_book
          foreign key (book_id)
          references book;

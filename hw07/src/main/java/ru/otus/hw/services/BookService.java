@@ -9,8 +9,8 @@ import ru.otus.hw.repositories.BookRepository;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
