@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataMongoTest
 @Import(BookService.class)
 @AutoConfigureDataMongo
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -54,6 +55,7 @@ public class BookServiceTest {
     void shouldFindExpectedBookById() {
         val optionalBook = bookService.findById(book1.getId());
         assertThat(optionalBook).isPresent().get().usingRecursiveComparison().isEqualTo(book1);
+        System.out.println(book1.toString());
     }
 
     @Test
