@@ -1,4 +1,4 @@
-package ru.otus.hw.Controller;
+package ru.otus.hw.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
