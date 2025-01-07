@@ -43,12 +43,12 @@ public class BookController {
     @GetMapping("/delete")
     public String deleteBook(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         try {
-            bookService.deleteById(id); // Вызов метода удаления книги
+            bookService.deleteById(id);
             redirectAttributes.addFlashAttribute("message", "Book deleted successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error deleting book: " + e.getMessage());
         }
-        return "redirect:/books"; // Возврат к списку книг
+        return "redirect:/books";
     }
 
 
