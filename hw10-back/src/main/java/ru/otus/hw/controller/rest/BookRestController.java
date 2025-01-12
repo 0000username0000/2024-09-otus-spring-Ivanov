@@ -1,0 +1,45 @@
+package ru.otus.hw.controller.rest;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.models.Book;
+import ru.otus.hw.services.dto.BookDtoService;
+import ru.otus.hw.services.BookService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/books")
+@RequiredArgsConstructor
+public class BookRestController {
+
+    private final BookService bookService;
+    private final BookDtoService bookDtoService;
+
+    @GetMapping
+    public List<BookDto> getAllBooks() {
+        List<Book> books = bookService.findAll();
+        return bookDtoService.toDtoList(books);
+    }
+
+    @PostMapping
+    public BookDto saveBook(@RequestBody BookDto bookDto) {
+        Book book = bookDtoService.toEntity(bookDto);
+        bookService.save(book);
+        return bookDtoService.toDto(book);
+    }
+
+    @PutMapping("/{id}")
+    public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
+        Book book = bookDtoService.toEntity(bookDto);
+        book.setId(id);
+        bookService.save(book);
+        return bookDtoService.toDto(book);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBook(@PathVariable Long id) {
+        bookService.deleteById(id);
+    }
+}
