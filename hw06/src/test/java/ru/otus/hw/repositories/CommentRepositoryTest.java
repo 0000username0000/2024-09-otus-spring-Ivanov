@@ -1,4 +1,4 @@
-package ru.otus.hw.services;
+package ru.otus.hw.repositories;
 
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.repositories.JpaCommentRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,9 +20,9 @@ public class CommentRepositoryTest {
     private static final long BOOK_ID = 2L;
 
     @Autowired
-    TestEntityManager testEntityManager;
+    private TestEntityManager testEntityManager;
     @Autowired
-    JpaCommentRepository commentRepository;
+    private JpaCommentRepository commentRepository;
 
     @BeforeEach
     void setUp() {

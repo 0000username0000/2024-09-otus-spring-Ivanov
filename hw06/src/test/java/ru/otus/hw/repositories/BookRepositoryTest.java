@@ -1,4 +1,4 @@
-package ru.otus.hw.services;
+package ru.otus.hw.repositories;
 
 import lombok.val;
 import org.hibernate.SessionFactory;
@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.repositories.JpaBookRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
