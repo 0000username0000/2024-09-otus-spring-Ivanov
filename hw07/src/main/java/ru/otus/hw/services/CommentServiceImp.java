@@ -8,7 +8,6 @@ import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
