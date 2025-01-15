@@ -15,13 +15,13 @@ public class GenreServiceImp implements GenreService {
 
     private final GenreRepository genreRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Genre> findAll() {
         return genreRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Genre> findAllByIds(Set<Long> ids) {
         return genreRepository.findByIdIn(ids);

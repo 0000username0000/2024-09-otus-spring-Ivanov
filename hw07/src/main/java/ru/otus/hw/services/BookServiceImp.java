@@ -15,13 +15,13 @@ public class BookServiceImp implements BookService {
 
     private final BookRepository bookRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public Optional<Book> findById(long id) {
         return bookRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Book> findAll() {
         return bookRepository.findAll();

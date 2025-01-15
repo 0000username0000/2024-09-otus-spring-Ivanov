@@ -15,7 +15,7 @@ public class CommentServiceImp implements CommentService {
 
     private final CommentRepository commentRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public Optional<Comment>findById(long id) {
         return commentRepository.findById(id);
