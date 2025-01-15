@@ -13,8 +13,8 @@ import ru.otus.hw.models.Comment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(CommentService.class)
-public class CommentServiceTest {
+@Import(CommentServiceImp.class)
+public class CommentServiceImpTest {
 
     private static final long FIRST_COMMENT_ID = 1L;
     private static final long BOOK_ID = 2L;
@@ -22,7 +22,7 @@ public class CommentServiceTest {
     @Autowired
     TestEntityManager testEntityManager;
     @Autowired
-    CommentService commentService;
+    CommentServiceImp commentService;
 
     @BeforeEach
     void setUp() {

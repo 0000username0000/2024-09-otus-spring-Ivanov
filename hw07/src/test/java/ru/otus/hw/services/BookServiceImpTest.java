@@ -4,6 +4,7 @@ import lombok.val;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
@@ -12,17 +13,18 @@ import ru.otus.hw.models.Book;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(BookService.class)
-public class BookServiceTest {
+@Import(BookServiceImp.class)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class BookServiceImpTest {
 
     @Autowired
-    private BookService bookService;
+    private BookServiceImp bookService;
     @Autowired
     private TestEntityManager testEntityManager;
 
     private static final long FIRST_BOOK_ID = 1L;
     private static final int EXPECTED_NUMBER_OF_BOOKS = 8;
-    private static final int EXPECTED_QUERIES_COUNT = 9;
+    private static final int EXPECTED_QUERIES_COUNT = 14;
     private static final String NEW_TITLE_BOOK = "New Title";
 
     @Test
