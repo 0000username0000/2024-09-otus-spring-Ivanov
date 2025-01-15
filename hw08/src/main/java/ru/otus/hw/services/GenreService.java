@@ -1,32 +1,18 @@
 package ru.otus.hw.services;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
 import java.util.Set;
 
-@Service
-@AllArgsConstructor
-public class GenreService {
 
-    private final GenreRepository genreRepository;
+public interface GenreService {
 
-    @Transactional(readOnly = true)
-    public List<Genre> findAll() {
-        return genreRepository.findAll();
-    }
+    List<Genre> findAll();
 
-    @Transactional(readOnly = true)
-    public List<Genre> findAllByIds(Set<String> ids) {
-        return genreRepository.findByIdIn(ids);
-    }
+    List<Genre> findAllByIds(Set<String> ids);
 
-    @Transactional
-    public void save(Genre genre) {
-        genreRepository.save(genre);
-    }
+    void save(Genre genre);
+
+    Genre findByIdNN(String id);
 }

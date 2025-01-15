@@ -1,32 +1,14 @@
 package ru.otus.hw.services;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.repositories.AuthorRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@AllArgsConstructor
-public class AuthorService {
-    private final AuthorRepository authorRepository;
+public interface AuthorService {
 
+    List<Author> findAll();
 
-    @Transactional(readOnly = true)
-    public List<Author> findAll() {
-        return authorRepository.findAll();
-    }
+    Author findByIdNN(String id);
 
-    @Transactional
-    public Optional<Author> findById(String id) {
-        return authorRepository.findById(id);
-    }
-
-    @Transactional
-    public Author save(Author author) {
-        return authorRepository.save(author);
-    }
+    void save(Author author);
 }

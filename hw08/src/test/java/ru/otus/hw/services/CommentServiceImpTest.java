@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -18,13 +17,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
-@Import(CommentService.class)
+@Import(CommentServiceImp.class)
 @AutoConfigureDataMongo
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class CommentServiceTest {
+public class CommentServiceImpTest {
 
     @Autowired
-    private CommentService commentService;
+    private CommentServiceImp commentService;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -49,8 +48,8 @@ public class CommentServiceTest {
     @Test
     void shouldFindExpectedCommentById() {
         val comment = mongoTemplate.findAll(Comment.class).get(0);
-        val optionalComment = commentService.findById(comment.getId());
-        assertThat(optionalComment).isPresent().get().usingRecursiveComparison().isEqualTo(comment);
+        val optionalComment = commentService.findByIdNN(comment.getId());
+        assertThat(optionalComment).usingRecursiveComparison().isEqualTo(comment);
     }
 
     @Test

@@ -1,37 +1,18 @@
 package ru.otus.hw.services;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.repositories.CommentRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@AllArgsConstructor
-public class CommentService {
+public interface CommentService {
 
-    private final CommentRepository commentRepository;
+    Comment findByIdNN(String id);
 
-    @Transactional(readOnly = true)
-    public Optional<Comment>findById(String id) {
-        return commentRepository.findById(id);
-    }
+    void save(Comment comment);
 
-    @Transactional
-    public void save(Comment comment) {
-        commentRepository.save(comment);
-    }
+    void deleteById(String id);
 
-    @Transactional
-    public void deleteById(String id) {
-        commentRepository.deleteById(id);
-    }
-
-    @Transactional
-    public List<Comment> findByBookId(String bookId) {
-        return commentRepository.findByBookId(bookId);
-    }
+    List<Comment> findByBookId(String bookId);
 }
+
