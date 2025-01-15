@@ -3,6 +3,7 @@ package ru.otus.hw.services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.CommentRepository;
 
@@ -17,8 +18,9 @@ public class CommentServiceImp implements CommentService {
 
     @Transactional
     @Override
-    public Optional<Comment>findById(long id) {
-        return commentRepository.findById(id);
+    public Comment findByIdNN(long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Comment not found with id = %s", id)));
     }
 
     @Transactional

@@ -32,9 +32,9 @@ public class CommentServiceImpTest {
 
     @Test
     void shouldFindExpectedCommentById() {
-        val optionalComment = commentService.findById(FIRST_COMMENT_ID);
+        val optionalComment = commentService.findByIdNN(FIRST_COMMENT_ID);
         val expectedComment = testEntityManager.find(Comment.class, FIRST_COMMENT_ID);
-        assertThat(optionalComment).isPresent().get().usingRecursiveComparison().isEqualTo(expectedComment);
+        assertThat(optionalComment).usingRecursiveComparison().isEqualTo(expectedComment);
     }
     @Test
     void shouldSaveNewComment() {

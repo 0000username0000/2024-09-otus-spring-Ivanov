@@ -9,7 +9,7 @@ public interface AuthorService {
 
     List<Author> findAll();
 
-    Optional<Author> findById(long id);
+    Author findByIdNN(long id);
 
     void save(Author author);
 }

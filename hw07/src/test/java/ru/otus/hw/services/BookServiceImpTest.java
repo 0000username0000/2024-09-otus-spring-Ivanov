@@ -29,9 +29,9 @@ public class BookServiceImpTest {
 
     @Test
     void shouldFindExpectedBookById() {
-       val optionalBook = bookService.findById(FIRST_BOOK_ID);
+       val optionalBook = bookService.findByIdNN(FIRST_BOOK_ID);
        val expectedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
-       assertThat(optionalBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
+       assertThat(optionalBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @Test

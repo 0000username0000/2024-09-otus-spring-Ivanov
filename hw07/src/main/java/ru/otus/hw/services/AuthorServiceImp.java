@@ -3,11 +3,11 @@ package ru.otus.hw.services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.repositories.AuthorRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -23,8 +23,9 @@ public class AuthorServiceImp implements AuthorService {
 
     @Transactional
     @Override
-    public Optional<Author> findById(long id) {
-        return authorRepository.findById(id);
+    public Author findByIdNN(long id) {
+        return authorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Author not found with id = %s", id)));
     }
 
     @Transactional
