@@ -3,10 +3,12 @@ package ru.otus.hw.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.BookService;
 
@@ -18,9 +20,8 @@ public class BookController {
 
     private final BookService bookService;
 
-    //http://localhost:8080/books
     @GetMapping("/books")
-    public String listPage(Model model) {
+    public String getListPage(Model model) {
         List<Book> books = bookService.findAll();
         model.addAttribute("books", books);
         return "books";
@@ -29,7 +30,7 @@ public class BookController {
     @GetMapping("/book-edit")
     public String editPage(@RequestParam("id") long id, Model model) {
         Book book = bookService.findById(id)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new EntityNotFoundException(String.format("book not found with id = %s", id)));
         model.addAttribute("book", book);
         return "book-editor";
     }
@@ -59,10 +60,7 @@ public class BookController {
     }
 
     @PostMapping("/book-create")
-    public String saveNewBook(Book book) {
-        if (book.getTitle() == null || book.getTitle().isEmpty()) {
-            throw new IllegalArgumentException("Title cannot be null or empty");
-        }
+    public String saveNewBook(@Validated Book book) {
         bookService.save(book);
         return "redirect:/books";
     }

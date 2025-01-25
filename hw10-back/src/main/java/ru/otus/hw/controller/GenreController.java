@@ -15,9 +15,8 @@ public class GenreController {
 
     private final GenreService genreService;
 
-    //http://localhost:8080/genres
     @GetMapping("/genres")
-    public String listPage(Model model) {
+    public String getListPage(Model model) {
         List<Genre> genres = genreService.findAll();
         model.addAttribute("genres", genres);
         return "genres";

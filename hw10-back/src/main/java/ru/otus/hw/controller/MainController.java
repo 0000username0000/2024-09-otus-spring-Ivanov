@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @AllArgsConstructor
 public class MainController {
 
-    //http://localhost:8080/
     @GetMapping("/")
     public String mainPage() {
         return "main";

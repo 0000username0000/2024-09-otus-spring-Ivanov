@@ -13,10 +13,14 @@ import ru.otus.hw.services.BookService;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
@@ -89,5 +93,12 @@ public class BookControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
         Mockito.verify(bookService).deleteById(eq(1L));
+    }
+
+    @Test
+    void shouldThrowEntityNotFoundExceptionWhenBookNotFound() throws Exception {
+        Mockito.when(bookService.findById(1L)).thenReturn(Optional.empty());
+        mockMvc.perform(get("/book-edit").param("id", "1"))
+                .andExpect(status().isNotFound());
     }
 }
