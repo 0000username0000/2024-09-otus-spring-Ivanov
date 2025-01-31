@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.services.AuthorService;
+import ru.otus.hw.services.AuthorServiceImpl;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorController {
 
-    private final AuthorService authorService;
+    private final AuthorServiceImpl authorServiceImpl;
 
     @GetMapping("/authors")
     public String getListPage(Model model) {
-        List<Author> authors = authorService.findAll();
+        List<Author> authors = authorServiceImpl.findAll();
         model.addAttribute("authors", authors);
         return "authors";
     }

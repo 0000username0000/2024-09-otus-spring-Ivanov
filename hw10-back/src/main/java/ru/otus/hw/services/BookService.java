@@ -1,37 +1,18 @@
 package ru.otus.hw.services;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.repositories.BookRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@AllArgsConstructor
-public class BookService {
+public interface BookService {
 
-    private final BookRepository bookRepository;
+    Book findByIdNN(long id);
 
-    @Transactional(readOnly = true)
-    public Optional<Book> findById(long id) {
-        return bookRepository.findById(id);
-    }
+    List<Book> findAll();
 
-    @Transactional(readOnly = true)
-    public List<Book> findAll() {
-        return bookRepository.findAll();
-    }
+    void save(Book book);
 
-    @Transactional
-    public void save(Book book) {
-        bookRepository.save(book);
-    }
-
-    @Transactional
-    public void deleteById(long id) {
-        bookRepository.deleteById(id);
-    }
+    void deleteById(long id);
 }

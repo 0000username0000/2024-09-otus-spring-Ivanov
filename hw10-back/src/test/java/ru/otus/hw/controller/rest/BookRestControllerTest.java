@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceImpl;
 import ru.otus.hw.services.dto.BookDtoService;
 
 import java.util.Collections;
@@ -24,7 +24,7 @@ class BookRestControllerTest {
     private final MockMvc mockMvc;
 
     @Mock
-    private BookService bookService;
+    private BookServiceImpl bookServiceImpl;
 
     @Mock
     private BookDtoService bookDtoService;
@@ -40,7 +40,7 @@ class BookRestControllerTest {
     @Test
     void testGetAllBooks() throws Exception {
         BookDto bookDto = new BookDto(1L, "Book Title");
-        when(bookService.findAll()).thenReturn(Collections.singletonList(new Book()));
+        when(bookServiceImpl.findAll()).thenReturn(Collections.singletonList(new Book()));
         when(bookDtoService.toDtoList(anyList())).thenReturn(Collections.singletonList(bookDto));
 
         mockMvc.perform(get("/api/books")
@@ -49,7 +49,7 @@ class BookRestControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].title").value("Book Title"));
 
-        verify(bookService, times(1)).findAll();
+        verify(bookServiceImpl, times(1)).findAll();
         verify(bookDtoService, times(1)).toDtoList(anyList());
     }
 
@@ -61,7 +61,7 @@ class BookRestControllerTest {
 
         when(bookDtoService.toEntity(inputDto)).thenReturn(book);
 
-        doNothing().when(bookService).save(book);
+        doNothing().when(bookServiceImpl).save(book);
 
         when(bookDtoService.toDto(book)).thenReturn(savedDto);
 
@@ -72,18 +72,18 @@ class BookRestControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.title").value("New Book"));
 
-        verify(bookService, times(1)).save(book);
+        verify(bookServiceImpl, times(1)).save(book);
         verify(bookDtoService, times(1)).toDto(book);
     }
 
     @Test
     void testDeleteBook() throws Exception {
-        doNothing().when(bookService).deleteById(1L);
+        doNothing().when(bookServiceImpl).deleteById(1L);
 
         mockMvc.perform(delete("/api/books/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(bookService, times(1)).deleteById(1L);
+        verify(bookServiceImpl, times(1)).deleteById(1L);
     }
 }

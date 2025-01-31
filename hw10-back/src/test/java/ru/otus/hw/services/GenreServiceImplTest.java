@@ -16,11 +16,11 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(GenreService.class)
-public class GenreServiceTest {
+@Import(GenreServiceImpl.class)
+public class GenreServiceImplTest {
 
     @Autowired
-    private GenreService genreService;
+    private GenreServiceImpl genreServiceImpl;
 
     @Autowired
     private TestEntityManager testEntityManager;
@@ -49,7 +49,7 @@ public class GenreServiceTest {
         ids.add(genre1.getId());
         ids.add(genre2.getId());
 
-        List<Genre> genres = genreService.findAllByIds(ids);
+        List<Genre> genres = genreServiceImpl.findAllByIds(ids);
 
         assertThat(genres).hasSize(2);
         assertThat(genres).extracting(Genre::getName).containsExactlyInAnyOrder("Genre 1", "Genre 2");

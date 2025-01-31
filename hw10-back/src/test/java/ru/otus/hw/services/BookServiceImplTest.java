@@ -13,12 +13,12 @@ import ru.otus.hw.models.Book;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(BookService.class)
+@Import(BookServiceImpl.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class BookServiceTest {
+public class BookServiceImplTest {
 
     @Autowired
-    private BookService bookService;
+    private BookServiceImpl bookServiceImpl;
     @Autowired
     private TestEntityManager testEntityManager;
 
@@ -29,9 +29,9 @@ public class BookServiceTest {
 
     @Test
     void shouldFindExpectedBookById() {
-       val optionalBook = bookService.findById(FIRST_BOOK_ID);
+       val optionalBook = bookServiceImpl.findByIdNN(FIRST_BOOK_ID);
        val expectedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
-       assertThat(optionalBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
+       assertThat(optionalBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class BookServiceTest {
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
         System.out.println("\n\n\n\n----------------------------------------------------------------------------------------------------------");
-        val books = bookService.findAll();
+        val books = bookServiceImpl.findAll();
         assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
                 .allMatch(s -> !s.getTitle().isEmpty())
                 .allMatch(s -> s.getGenres() != null && !s.getGenres().isEmpty())
@@ -55,7 +55,7 @@ public class BookServiceTest {
         val book = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         String title = book.getTitle();
         book.setTitle(NEW_TITLE_BOOK);
-        bookService.save(book);
+        bookServiceImpl.save(book);
         val updateBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(updateBook.getTitle()).isNotEqualTo(title).isEqualTo(NEW_TITLE_BOOK);
     }
@@ -65,7 +65,7 @@ public class BookServiceTest {
         val newBook = new Book();
         newBook.setTitle("New Title");
         newBook.setId(0);
-        bookService.save(newBook);
+        bookServiceImpl.save(newBook);
         assertThat(newBook.getId()).isGreaterThan(0);
     }
 
@@ -73,7 +73,7 @@ public class BookServiceTest {
     void shouldDeleteById() {
         val book = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(book).isNotNull();
-        bookService.deleteById(FIRST_BOOK_ID);
+        bookServiceImpl.deleteById(FIRST_BOOK_ID);
         val deletedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(deletedBook).isNull();
     }

@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.services.AuthorService;
+import ru.otus.hw.services.AuthorServiceImpl;
 import ru.otus.hw.services.dto.AuthorDtoService;
 
 import java.util.Collections;
@@ -23,7 +23,7 @@ class AuthorRestControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private AuthorService authorService;
+    private AuthorServiceImpl authorServiceImpl;
 
     @Mock
     private AuthorDtoService authorDtoService;
@@ -39,7 +39,7 @@ class AuthorRestControllerTest {
     @Test
     void testGetAllAuthors() throws Exception {
         AuthorDto authorDto = new AuthorDto(1L, "John Doe");
-        when(authorService.findAll()).thenReturn(Collections.singletonList(new Author()));
+        when(authorServiceImpl.findAll()).thenReturn(Collections.singletonList(new Author()));
         when(authorDtoService.toDtoList(anyList())).thenReturn(Collections.singletonList(authorDto));
 
         mockMvc.perform(get("/api/authors")
@@ -48,7 +48,7 @@ class AuthorRestControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].fullName").value("John Doe"));
 
-        verify(authorService, times(1)).findAll();
+        verify(authorServiceImpl, times(1)).findAll();
         verify(authorDtoService, times(1)).toDtoList(anyList());
     }
 }

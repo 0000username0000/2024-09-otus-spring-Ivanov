@@ -7,11 +7,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceImpl;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasItem;
@@ -30,11 +30,11 @@ public class BookControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BookService bookService;
+    private BookServiceImpl bookServiceImpl;
 
     @Test
     void shouldReturnBooksList() throws Exception {
-        Mockito.when(bookService.findAll()).thenReturn(Arrays.asList(
+        Mockito.when(bookServiceImpl.findAll()).thenReturn(Arrays.asList(
                 new Book(1L, "Book 1", null, null),
                 new Book(2L, "Book 2", null, null)
         ));
@@ -50,7 +50,7 @@ public class BookControllerTest {
 
     @Test
     void shouldReturnEditPageForBook() throws Exception {
-        Mockito.when(bookService.findById(1L)).thenReturn(Optional.of(new Book(1L, "Book 1", null, null)));
+        Mockito.when(bookServiceImpl.findByIdNN(1L)).thenReturn(new Book(1L, "Book 1", null, null));
         mockMvc.perform(get("/book-edit").param("id", "1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("book-editor"))
@@ -66,7 +66,7 @@ public class BookControllerTest {
                         .param("title", "Updated Book"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
-        Mockito.verify(bookService).save(any(Book.class));
+        Mockito.verify(bookServiceImpl).save(any(Book.class));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class BookControllerTest {
                         .param("title", "New Book"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
-        Mockito.verify(bookService).save(any(Book.class));
+        Mockito.verify(bookServiceImpl).save(any(Book.class));
     }
 
     @Test
@@ -92,12 +92,12 @@ public class BookControllerTest {
         mockMvc.perform(get("/delete").param("id", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/books"));
-        Mockito.verify(bookService).deleteById(eq(1L));
+        Mockito.verify(bookServiceImpl).deleteById(eq(1L));
     }
 
     @Test
     void shouldThrowEntityNotFoundExceptionWhenBookNotFound() throws Exception {
-        Mockito.when(bookService.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(bookServiceImpl.findByIdNN(1L)).thenThrow(new EntityNotFoundException("Book not found"));
         mockMvc.perform(get("/book-edit").param("id", "1"))
                 .andExpect(status().isNotFound());
     }

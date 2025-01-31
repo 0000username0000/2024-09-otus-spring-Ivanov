@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceImpl;
 
 import java.util.List;
 
@@ -18,33 +17,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService bookService;
+    private final BookServiceImpl bookServiceImpl;
 
     @GetMapping("/books")
     public String getListPage(Model model) {
-        List<Book> books = bookService.findAll();
+        List<Book> books = bookServiceImpl.findAll();
         model.addAttribute("books", books);
         return "books";
     }
 
     @GetMapping("/book-edit")
     public String editPage(@RequestParam("id") long id, Model model) {
-        Book book = bookService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("book not found with id = %s", id)));
+        Book book = bookServiceImpl.findByIdNN(id);
         model.addAttribute("book", book);
         return "book-editor";
     }
 
     @PostMapping("/book-edit")
     public String savePerson(Book book) {
-        bookService.save(book);
+        bookServiceImpl.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("/delete")
     public String deleteBook(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         try {
-            bookService.deleteById(id);
+            bookServiceImpl.deleteById(id);
             redirectAttributes.addFlashAttribute("message", "Book deleted successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error deleting book: " + e.getMessage());
@@ -61,7 +59,7 @@ public class BookController {
 
     @PostMapping("/book-create")
     public String saveNewBook(@Validated Book book) {
-        bookService.save(book);
+        bookServiceImpl.save(book);
         return "redirect:/books";
     }
 }

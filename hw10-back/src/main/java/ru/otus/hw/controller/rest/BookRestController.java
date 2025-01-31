@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.dto.BookDtoService;
-import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceImpl;
 
 import java.util.List;
 
@@ -21,20 +21,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookRestController {
 
-    private final BookService bookService;
+    private final BookServiceImpl bookServiceImpl;
 
     private final BookDtoService bookDtoService;
 
     @GetMapping
     public List<BookDto> getAllBooks() {
-        List<Book> books = bookService.findAll();
+        List<Book> books = bookServiceImpl.findAll();
         return bookDtoService.toDtoList(books);
     }
 
     @PostMapping
     public BookDto saveBook(@RequestBody BookDto bookDto) {
         Book book = bookDtoService.toEntity(bookDto);
-        bookService.save(book);
+        bookServiceImpl.save(book);
         return bookDtoService.toDto(book);
     }
 
@@ -42,12 +42,12 @@ public class BookRestController {
     public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
         Book book = bookDtoService.toEntity(bookDto);
         book.setId(id);
-        bookService.save(book);
+        bookServiceImpl.save(book);
         return bookDtoService.toDto(book);
     }
 
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
-        bookService.deleteById(id);
+        bookServiceImpl.deleteById(id);
     }
 }
