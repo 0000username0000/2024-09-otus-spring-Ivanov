@@ -1,0 +1,11 @@
+spring:
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb
+    driver: h2
+    username: sa
+    password: password
+  sql:
+    init:
+      mode: always
+  profiles:
+    active: default
