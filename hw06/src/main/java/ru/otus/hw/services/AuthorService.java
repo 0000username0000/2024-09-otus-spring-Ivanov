@@ -1,44 +1,13 @@
 package ru.otus.hw.services;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.repositories.AuthorRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-@AllArgsConstructor
-@Service
-public class AuthorService implements AuthorRepository {
+public interface AuthorService {
+    List<Author> findAll();
 
-    @PersistenceContext
-    private final EntityManager entityManager;
+    Author findById(long id);
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<Author> findAll() {
-        TypedQuery<Author> typedQuery = entityManager
-                .createQuery("select e from Author e order by e.fullName", Author.class);
-        return typedQuery.getResultList();
-    }
-
-    @Override
-    public Optional<Author> findById(long id) {
-        return Optional.ofNullable(entityManager.find(Author.class, id));
-    }
-
-    @Transactional
-    @Override
-    public Author save(Author author) {
-        if (author.getId() == 0) {
-            entityManager.persist(author);
-            return author;
-        }
-        return entityManager.merge(author);
-    }
+    Author save(Author author);
 }

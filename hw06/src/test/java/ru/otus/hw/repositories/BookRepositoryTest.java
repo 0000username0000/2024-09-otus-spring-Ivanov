@@ -1,4 +1,4 @@
-package ru.otus.hw.services;
+package ru.otus.hw.repositories;
 
 import lombok.val;
 import org.hibernate.SessionFactory;
@@ -13,12 +13,20 @@ import ru.otus.hw.models.Book;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(BookService.class)
+<<<<<<<< HEAD:hw11/hw11-back/src/test/java/ru/otus/hw/services/BookServiceImplTest.java
+@Import(BookServiceImpl.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class BookServiceTest {
+public class BookServiceImplTest {
 
     @Autowired
-    private BookService bookService;
+    private BookServiceImpl bookServiceImpl;
+========
+@Import(JpaBookRepository.class)
+public class BookRepositoryTest {
+
+    @Autowired
+    private JpaBookRepository bookRepository;
+>>>>>>>> 4fa3896e326c68a10592b47e5922472b6d37bd3f:hw06/src/test/java/ru/otus/hw/repositories/BookRepositoryTest.java
     @Autowired
     private TestEntityManager testEntityManager;
 
@@ -29,9 +37,13 @@ public class BookServiceTest {
 
     @Test
     void shouldFindExpectedBookById() {
-       val optionalBook = bookService.findById(FIRST_BOOK_ID);
+<<<<<<<< HEAD:hw11/hw11-back/src/test/java/ru/otus/hw/services/BookServiceImplTest.java
+       val optionalBook = bookServiceImpl.findByIdNN(FIRST_BOOK_ID);
+========
+       val optionalBook = bookRepository.findById(FIRST_BOOK_ID);
+>>>>>>>> 4fa3896e326c68a10592b47e5922472b6d37bd3f:hw06/src/test/java/ru/otus/hw/repositories/BookRepositoryTest.java
        val expectedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
-       assertThat(optionalBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
+       assertThat(optionalBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @Test
@@ -41,7 +53,11 @@ public class BookServiceTest {
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
         System.out.println("\n\n\n\n----------------------------------------------------------------------------------------------------------");
-        val books = bookService.findAll();
+<<<<<<<< HEAD:hw11/hw11-back/src/test/java/ru/otus/hw/services/BookServiceImplTest.java
+        val books = bookServiceImpl.findAll();
+========
+        val books = bookRepository.findAll();
+>>>>>>>> 4fa3896e326c68a10592b47e5922472b6d37bd3f:hw06/src/test/java/ru/otus/hw/repositories/BookRepositoryTest.java
         assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
                 .allMatch(s -> !s.getTitle().isEmpty())
                 .allMatch(s -> s.getGenres() != null && !s.getGenres().isEmpty())
@@ -55,7 +71,11 @@ public class BookServiceTest {
         val book = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         String title = book.getTitle();
         book.setTitle(NEW_TITLE_BOOK);
-        bookService.save(book);
+<<<<<<<< HEAD:hw11/hw11-back/src/test/java/ru/otus/hw/services/BookServiceImplTest.java
+        bookServiceImpl.save(book);
+========
+        bookRepository.save(book);
+>>>>>>>> 4fa3896e326c68a10592b47e5922472b6d37bd3f:hw06/src/test/java/ru/otus/hw/repositories/BookRepositoryTest.java
         val updateBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(updateBook.getTitle()).isNotEqualTo(title).isEqualTo(NEW_TITLE_BOOK);
     }
@@ -65,7 +85,11 @@ public class BookServiceTest {
         val newBook = new Book();
         newBook.setTitle("New Title");
         newBook.setId(0);
-        bookService.save(newBook);
+<<<<<<<< HEAD:hw11/hw11-back/src/test/java/ru/otus/hw/services/BookServiceImplTest.java
+        bookServiceImpl.save(newBook);
+========
+        bookRepository.save(newBook);
+>>>>>>>> 4fa3896e326c68a10592b47e5922472b6d37bd3f:hw06/src/test/java/ru/otus/hw/repositories/BookRepositoryTest.java
         assertThat(newBook.getId()).isGreaterThan(0);
     }
 
@@ -73,7 +97,11 @@ public class BookServiceTest {
     void shouldDeleteById() {
         val book = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(book).isNotNull();
-        bookService.deleteById(FIRST_BOOK_ID);
+<<<<<<<< HEAD:hw11/hw11-back/src/test/java/ru/otus/hw/services/BookServiceImplTest.java
+        bookServiceImpl.deleteById(FIRST_BOOK_ID);
+========
+        bookRepository.deleteById(FIRST_BOOK_ID);
+>>>>>>>> 4fa3896e326c68a10592b47e5922472b6d37bd3f:hw06/src/test/java/ru/otus/hw/repositories/BookRepositoryTest.java
         val deletedBook = testEntityManager.find(Book.class, FIRST_BOOK_ID);
         assertThat(deletedBook).isNull();
     }
