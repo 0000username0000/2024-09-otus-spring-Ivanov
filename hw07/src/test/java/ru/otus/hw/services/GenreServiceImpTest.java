@@ -16,11 +16,11 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(GenreService.class)
-public class GenreServiceTest {
+@Import(GenreServiceImp.class)
+public class GenreServiceImpTest {
 
     @Autowired
-    private GenreService genreService;
+    private GenreServiceImp genreService;
 
     @Autowired
     private TestEntityManager testEntityManager;

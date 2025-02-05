@@ -15,9 +15,8 @@ public class AuthorController {
 
     private final AuthorService authorService;
 
-    //http://localhost:8080/authors
     @GetMapping("/authors")
-    public String listPage(Model model) {
+    public String getListPage(Model model) {
         List<Author> authors = authorService.findAll();
         model.addAttribute("authors", authors);
         return "authors";
