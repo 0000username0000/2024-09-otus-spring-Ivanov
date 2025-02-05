@@ -27,7 +27,4 @@ public class Book {
 
     @Column("author_id")
     private Long authorId;
-
-    @MappedCollection(idColumn = "book_id", keyColumn = "genre_id")
-    private List<Genre> genres =new ArrayList<>();
 }

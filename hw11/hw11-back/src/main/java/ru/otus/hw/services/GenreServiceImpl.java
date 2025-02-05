@@ -23,7 +23,7 @@ public class GenreServiceImpl implements GenreService{
         return genreRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public Flux<Genre> findAllByIds(Set<Long> ids) {
         return genreRepository.findByIdIn(ids);

@@ -7,15 +7,16 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
+import ru.otus.hw.repositories.BooksGenresRepository;
 import ru.otus.hw.repositories.BookRepository;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class BookServiceImpl implements BookService{
 
     private final BookRepository bookRepository;
+
+    private final BooksGenresRepository booksGenresRepository;
 
     @Transactional
     @Override
@@ -32,13 +33,15 @@ public class BookServiceImpl implements BookService{
 
     @Transactional
     @Override
-    public Mono<Void> save(Mono<Book> book) {
-        return book.flatMap(bookRepository::save).then();
+    public Mono<Book> save(Mono<Book> book) {
+        return book.flatMap(bookRepository::save);
     }
 
     @Transactional
     @Override
-    public Mono<Void> deleteById(long id) {
-       return bookRepository.deleteById(id);
+    public Mono<Void> deleteById(long bookId) {
+        return booksGenresRepository.deleteByBookId(bookId)
+                .then(bookRepository.deleteById(bookId));
     }
 }
+

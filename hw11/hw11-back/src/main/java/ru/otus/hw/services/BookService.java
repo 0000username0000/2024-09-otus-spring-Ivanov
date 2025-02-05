@@ -10,7 +10,7 @@ public interface BookService {
 
     Flux<Book> findAll();
 
-    Mono<Void> save(Mono<Book> book);
+    Mono<Book> save(Mono<Book> book);
 
     Mono<Void> deleteById(long id);
 }
