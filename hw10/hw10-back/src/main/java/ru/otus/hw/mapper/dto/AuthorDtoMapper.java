@@ -1,14 +1,14 @@
-package ru.otus.hw.services.dto;
+package ru.otus.hw.mapper.dto;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.models.Author;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-public class AuthorDtoService {
+@Component
+public class AuthorDtoMapper {
 
     public AuthorDto toDto(Author author) {
         return new AuthorDto(author.getId(), author.getFullName());

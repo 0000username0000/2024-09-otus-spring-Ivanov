@@ -10,12 +10,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.BookServiceImpl;
-import ru.otus.hw.services.dto.BookDtoService;
+import ru.otus.hw.mapper.dto.BookDtoMapper;
 
 import java.util.Collections;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,7 +33,7 @@ class BookRestControllerTest {
     private BookServiceImpl bookServiceImpl;
 
     @Mock
-    private BookDtoService bookDtoService;
+    private BookDtoMapper bookDtoMapper;
 
     @InjectMocks
     private BookRestController bookRestController;
@@ -41,7 +47,7 @@ class BookRestControllerTest {
     void testGetAllBooks() throws Exception {
         BookDto bookDto = new BookDto(1L, "Book Title");
         when(bookServiceImpl.findAll()).thenReturn(Collections.singletonList(new Book()));
-        when(bookDtoService.toDtoList(anyList())).thenReturn(Collections.singletonList(bookDto));
+        when(bookDtoMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(bookDto));
 
         mockMvc.perform(get("/api/books")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -50,7 +56,7 @@ class BookRestControllerTest {
                 .andExpect(jsonPath("$[0].title").value("Book Title"));
 
         verify(bookServiceImpl, times(1)).findAll();
-        verify(bookDtoService, times(1)).toDtoList(anyList());
+        verify(bookDtoMapper, times(1)).toDtoList(anyList());
     }
 
     @Test
@@ -59,11 +65,11 @@ class BookRestControllerTest {
         Book book = new Book();
         BookDto savedDto = new BookDto(1L, "New Book");
 
-        when(bookDtoService.toEntity(inputDto)).thenReturn(book);
+        when(bookDtoMapper.toEntity(inputDto)).thenReturn(book);
 
         doNothing().when(bookServiceImpl).save(book);
 
-        when(bookDtoService.toDto(book)).thenReturn(savedDto);
+        when(bookDtoMapper.toDto(book)).thenReturn(savedDto);
 
         mockMvc.perform(post("/api/books")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +79,7 @@ class BookRestControllerTest {
                 .andExpect(jsonPath("$.title").value("New Book"));
 
         verify(bookServiceImpl, times(1)).save(book);
-        verify(bookDtoService, times(1)).toDto(book);
+        verify(bookDtoMapper, times(1)).toDto(book);
     }
 
     @Test

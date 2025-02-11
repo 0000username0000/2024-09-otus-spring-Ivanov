@@ -34,7 +34,6 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank
     @Column(name = "title", nullable = false)
     private String title;
 

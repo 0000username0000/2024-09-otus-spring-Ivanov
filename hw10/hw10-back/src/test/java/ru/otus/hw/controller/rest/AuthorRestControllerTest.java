@@ -10,13 +10,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.services.AuthorServiceImpl;
-import ru.otus.hw.services.dto.AuthorDtoService;
+import ru.otus.hw.mapper.dto.AuthorDtoMapper;
 
 import java.util.Collections;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 class AuthorRestControllerTest {
 
@@ -26,7 +30,7 @@ class AuthorRestControllerTest {
     private AuthorServiceImpl authorServiceImpl;
 
     @Mock
-    private AuthorDtoService authorDtoService;
+    private AuthorDtoMapper authorDtoMapper;
 
     @InjectMocks
     private AuthorRestController authorRestController;
@@ -40,7 +44,7 @@ class AuthorRestControllerTest {
     void testGetAllAuthors() throws Exception {
         AuthorDto authorDto = new AuthorDto(1L, "John Doe");
         when(authorServiceImpl.findAll()).thenReturn(Collections.singletonList(new Author()));
-        when(authorDtoService.toDtoList(anyList())).thenReturn(Collections.singletonList(authorDto));
+        when(authorDtoMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(authorDto));
 
         mockMvc.perform(get("/api/authors")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -49,6 +53,6 @@ class AuthorRestControllerTest {
                 .andExpect(jsonPath("$[0].fullName").value("John Doe"));
 
         verify(authorServiceImpl, times(1)).findAll();
-        verify(authorDtoService, times(1)).toDtoList(anyList());
+        verify(authorDtoMapper, times(1)).toDtoList(anyList());
     }
 }
