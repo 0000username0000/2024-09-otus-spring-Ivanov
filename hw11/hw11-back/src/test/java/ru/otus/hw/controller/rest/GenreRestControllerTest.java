@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.services.GenreServiceImpl;
-import ru.otus.hw.services.dto.GenreDtoService;
+import ru.otus.hw.mapper.dto.GenreDtoMapper;
 
 import static org.mockito.Mockito.when;
 
@@ -24,7 +24,7 @@ public class GenreRestControllerTest {
     private GenreServiceImpl genreServiceImpl;
 
     @MockBean
-    private GenreDtoService genreDtoService;
+    private GenreDtoMapper genreDtoMapper;
 
     @Test
     void shouldGetAllGenres() {
@@ -35,7 +35,7 @@ public class GenreRestControllerTest {
         GenreDto genreDto2 = new GenreDto(2L, "genre2");
 
         when(genreServiceImpl.findAll()).thenReturn(Flux.just(genre1, genre2));
-        when(genreDtoService.toDtoList(Mockito.any())).thenReturn(Flux.just(genreDto1, genreDto2));
+        when(genreDtoMapper.toDtoList(Mockito.any())).thenReturn(Flux.just(genreDto1, genreDto2));
 
         webTestClient.get().uri("/api/genres")
                 .exchange()

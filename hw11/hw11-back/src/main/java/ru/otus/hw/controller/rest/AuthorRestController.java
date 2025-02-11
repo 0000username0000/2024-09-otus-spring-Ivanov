@@ -6,24 +6,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.mapper.dto.AuthorDtoMapper;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.services.AuthorServiceImpl;
-import ru.otus.hw.services.dto.AuthorDtoService;
-
-import java.util.List;
+import ru.otus.hw.services.AuthorService;
 
 @RestController
 @RequestMapping("/api/authors")
 @RequiredArgsConstructor
 public class AuthorRestController {
 
-    private final AuthorServiceImpl authorServiceImpl;
+    private final AuthorService authorService;
 
-    private final AuthorDtoService authorDtoService;
+    private final AuthorDtoMapper authorDtoMapper;
 
     @GetMapping
     public Flux<AuthorDto> getAllAuthors() {
-        Flux<Author> authors = authorServiceImpl.findAll();
-        return authorDtoService.toDtoList(authors);
+        Flux<Author> authors = authorService.findAll();
+        return authorDtoMapper.toDtoList(authors);
     }
 }

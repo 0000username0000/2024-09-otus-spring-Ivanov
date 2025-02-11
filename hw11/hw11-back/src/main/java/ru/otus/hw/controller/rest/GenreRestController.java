@@ -6,24 +6,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.mapper.dto.GenreDtoMapper;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.services.GenreServiceImpl;
-import ru.otus.hw.services.dto.GenreDtoService;
-
-import java.util.List;
+import ru.otus.hw.services.GenreService;
 
 @RestController
 @RequestMapping("/api/genres")
 @RequiredArgsConstructor
 public class GenreRestController {
 
-    private final GenreServiceImpl genreServiceImpl;
+    private final GenreService genreService;
 
-    private final GenreDtoService genreDtoService;
+    private final GenreDtoMapper genreDtoMapper;
 
     @GetMapping
     public Flux<GenreDto> getAllGenres() {
-        Flux<Genre> genres = genreServiceImpl.findAll();
-        return genreDtoService.toDtoList(genres);
+        Flux<Genre> genres = genreService.findAll();
+        return genreDtoMapper.toDtoList(genres);
     }
 }

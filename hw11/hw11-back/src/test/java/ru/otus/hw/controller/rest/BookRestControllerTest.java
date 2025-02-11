@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.dto.BookDtoService;
+import ru.otus.hw.mapper.dto.BookDtoMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -25,7 +25,7 @@ public class BookRestControllerTest {
     private BookService bookService;
 
     @MockBean
-    private BookDtoService bookDtoService;
+    private BookDtoMapper bookDtoMapper;
 
     @Test
     void shouldGetAllBooks() {
@@ -36,7 +36,7 @@ public class BookRestControllerTest {
         BookDto bookDto2 = new BookDto(2L, "title2");
 
         when(bookService.findAll()).thenReturn(Flux.just(book1, book2));
-        when(bookDtoService.toDto(any())).thenReturn(Mono.just(bookDto1), Mono.just(bookDto2));
+        when(bookDtoMapper.toDto(any())).thenReturn(Mono.just(bookDto1), Mono.just(bookDto2));
 
         webTestClient.get().uri("/api/books")
                 .exchange()
@@ -51,7 +51,7 @@ public class BookRestControllerTest {
         BookDto bookDto = new BookDto(null, "Dune");
         Book book = new Book(3L, "Dune", 3L);
 
-        when(bookDtoService.toEntity(any())).thenReturn(Mono.just(book));
+        when(bookDtoMapper.toEntity(any())).thenReturn(Mono.just(book));
         when(bookService.save(any())).thenReturn(Mono.just(book));
 
         webTestClient.post().uri("/api/books")

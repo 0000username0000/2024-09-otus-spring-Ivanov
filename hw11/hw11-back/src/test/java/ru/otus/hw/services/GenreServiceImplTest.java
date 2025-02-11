@@ -9,11 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Genre;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(GenreServiceImpl.class)

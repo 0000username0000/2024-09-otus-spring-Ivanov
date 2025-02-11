@@ -17,7 +17,6 @@ public class Genre {
     @Id
     private Long id;
 
-    @NotBlank
     @Column("name")
     private String name;
 }

@@ -10,6 +10,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BooksGenresId implements Serializable {
+
     private Long bookId;
+
     private Long genreId;
+
 }

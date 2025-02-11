@@ -21,7 +21,6 @@ public class Book {
     @Id
     private Long id;
 
-    @NotBlank
     @Column("title")
     private String title;
 

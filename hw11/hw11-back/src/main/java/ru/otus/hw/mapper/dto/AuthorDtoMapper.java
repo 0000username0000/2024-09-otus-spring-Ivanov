@@ -1,13 +1,14 @@
-package ru.otus.hw.services.dto;
+package ru.otus.hw.mapper.dto;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.models.Author;
 
-@Service
-public class AuthorDtoService {
+@Controller
+public class AuthorDtoMapper {
 
     public Mono<AuthorDto> toDto(Mono<Author> authorMono) {
         return authorMono.map(author -> new AuthorDto(author.getId(), author.getFullName()));

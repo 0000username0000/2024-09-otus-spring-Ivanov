@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.services.AuthorServiceImpl;
-import ru.otus.hw.services.dto.AuthorDtoService;
+import ru.otus.hw.mapper.dto.AuthorDtoMapper;
 
 import static org.mockito.Mockito.when;
 
@@ -24,7 +24,7 @@ public class AuthorRestControllerTest {
     private AuthorServiceImpl authorServiceImpl;
 
     @MockBean
-    private AuthorDtoService authorDtoService;
+    private AuthorDtoMapper authorDtoMapper;
 
     @Test
     void shouldGetAllAuthors() {
@@ -35,7 +35,7 @@ public class AuthorRestControllerTest {
         AuthorDto authorDto2 = new AuthorDto(2L, "fio2");
 
         when(authorServiceImpl.findAll()).thenReturn(Flux.just(author1, author2));
-        when(authorDtoService.toDtoList(Mockito.any())).thenReturn(Flux.just(authorDto1, authorDto2));
+        when(authorDtoMapper.toDtoList(Mockito.any())).thenReturn(Flux.just(authorDto1, authorDto2));
 
         webTestClient.get().uri("/api/authors")
                 .exchange()

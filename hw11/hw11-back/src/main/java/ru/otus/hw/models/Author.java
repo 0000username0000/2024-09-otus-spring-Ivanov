@@ -17,7 +17,6 @@ public class Author {
     @Id
     private long id;
 
-    @NotBlank
     @Column("full_name")
     private String fullName;
 }

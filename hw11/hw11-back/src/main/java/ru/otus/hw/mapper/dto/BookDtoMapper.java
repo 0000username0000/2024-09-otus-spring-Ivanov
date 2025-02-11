@@ -1,13 +1,13 @@
-package ru.otus.hw.services.dto;
+package ru.otus.hw.mapper.dto;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
 
-@Service
-public class BookDtoService {
+@Component
+public class BookDtoMapper {
 
     public Mono<BookDto> toDto(Mono<Book> bookMono) {
         return bookMono.map(this::toDto);

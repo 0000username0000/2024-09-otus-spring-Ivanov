@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.dto.BookDtoService;
+import ru.otus.hw.mapper.dto.BookDtoMapper;
 
 @RestController
 @RequestMapping("/api/books")
@@ -15,17 +15,18 @@ import ru.otus.hw.services.dto.BookDtoService;
 public class BookRestController {
 
     private final BookService bookService;
-    private final BookDtoService bookDtoService;
+
+    private final BookDtoMapper bookDtoMapper;
 
     @GetMapping
     public Flux<BookDto> getAllBooks() {
         return bookService.findAll()
-                .flatMap(book -> bookDtoService.toDto(Mono.just(book)));
+                .flatMap(book -> bookDtoMapper.toDto(Mono.just(book)));
     }
 
     @PostMapping
     public Mono<Book> saveBook(@RequestBody BookDto bookDto) {
-        return bookDtoService.toEntity(Mono.just(bookDto))
+        return bookDtoMapper.toEntity(Mono.just(bookDto))
                 .flatMap(book -> bookService.save(Mono.just(book)));
     }
 
