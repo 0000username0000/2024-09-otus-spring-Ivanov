@@ -4,8 +4,12 @@ spring:
   sql:
     init:
       mode: always
-
-
+      data-locations: classpath:data.sql
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: SpringBatchDB
   jpa:
     generate-ddl: false
     hibernate:
@@ -18,3 +22,23 @@ spring:
 logging:
   level:
     ROOT: ERROR
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+batch:
+  genreFilePath: src/main/resources/output/genres.csv
+  authorFilePath: src/main/resources/output/authors.csv
+  bookFilePath: src/main/resources/output/books.csv

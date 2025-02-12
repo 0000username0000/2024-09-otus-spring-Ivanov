@@ -4,11 +4,13 @@ spring:
   sql:
     init:
       mode: always
+      data-locations: classpath:data.sql
 
-  batch:
-    job:
-      enabled: true
-
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: SpringBatchDB
 
   jpa:
     generate-ddl: false
@@ -19,12 +21,10 @@ spring:
       hibernate:
         format_sql: true
 
-logging:
-  level:
-    ROOT: ERROR
-
 de:
   flapdoodle:
     mongodb:
       embedded:
         version: 4.0.2
+        options:
+          journal: false

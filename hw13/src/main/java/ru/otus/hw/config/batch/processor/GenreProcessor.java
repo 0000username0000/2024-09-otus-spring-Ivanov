@@ -1,4 +1,4 @@
-package ru.otus.hw.config;
+package ru.otus.hw.config.batch.processor;
 
 import org.springframework.batch.item.ItemProcessor;
 import ru.otus.hw.models.Genre;

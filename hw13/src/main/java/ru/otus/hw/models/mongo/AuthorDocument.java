@@ -8,10 +8,10 @@ import org.springframework.data.annotation.Id;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GenreDocument {
+public class AuthorDocument {
 
     @Id
     private String id;
 
-    private String name;
+    private String fullName;
 }
