@@ -2,7 +2,6 @@ package ru.otus.hw.config.batch;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.support.SimpleFlow;
@@ -31,7 +30,6 @@ public class BatchConfig {
                 .build();
     }
 
-    @StepScope
     @Bean
     public Job migrationJob(TaskExecutor taskExecutor, SimpleFlow splitFlow, Step bookStep) {
         return new JobBuilder("migrationJob", jobRepository)

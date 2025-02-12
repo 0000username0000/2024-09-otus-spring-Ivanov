@@ -2,6 +2,7 @@ package ru.otus.hw.config.batch;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.data.MongoItemWriter;
@@ -33,6 +34,7 @@ public class AuthorBatchConfig {
                 .build();
     }
 
+    @StepScope
     @Bean
     public FlatFileItemWriter<AuthorDocument> authorFileWriter(AppConfig appConfig) {
         return new FlatFileItemWriterBuilder<AuthorDocument>()
