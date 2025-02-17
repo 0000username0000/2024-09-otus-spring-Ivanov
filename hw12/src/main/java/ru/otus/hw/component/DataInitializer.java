@@ -20,8 +20,8 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         Users users = new Users(null, "user", passwordEncoder.encode("password"), "USER");
-        Users admin = new Users(null, "admin", passwordEncoder.encode("password"), "ADMIN");
-        usersRepository.saveAll(List.of(users, admin));
+//        Users admin = new Users(null, "admin", passwordEncoder.encode("password"), "ADMIN");
+//        usersRepository.saveAll(List.of(users, admin));
         System.out.println("Созданы пользователи: user/password, admin/password, passwordCrypt: " + passwordEncoder.encode("password"));
     }
 }
