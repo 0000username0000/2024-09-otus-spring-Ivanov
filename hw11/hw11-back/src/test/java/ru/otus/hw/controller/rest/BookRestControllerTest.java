@@ -2,20 +2,20 @@ package ru.otus.hw.controller.rest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.mapper.dto.BookDtoMapper;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.services.BookService;
-import ru.otus.hw.mapper.dto.BookDtoMapper;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@WebFluxTest(BookRestController.class)
+@WebMvcTest(BookRestController.class)
 public class BookRestControllerTest {
 
     @Autowired
@@ -27,47 +27,53 @@ public class BookRestControllerTest {
     @MockBean
     private BookDtoMapper bookDtoMapper;
 
-//    @Test
-//    void shouldGetAllBooks() {
-//        Book book1 = new Book(1L, "title1", 1L);
-//        Book book2 = new Book(2L, "title2", 2L);
-//
-//        BookDto bookDto1 = new BookDto(1L, "title1");
-//        BookDto bookDto2 = new BookDto(2L, "title2");
-//
-//        when(bookService.findAll()).thenReturn(Flux.just(book1, book2));
-//        when(bookDtoMapper.toDto(any())).thenReturn(Mono.just(bookDto1), Mono.just(bookDto2));
-//
-//        webTestClient.get().uri("/api/books")
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBodyList(BookDto.class)
-//                .hasSize(2)
-//                .contains(bookDto1, bookDto2);
-//    }
-//
-//    @Test
-//    void shouldSaveBook() {
-//        BookDto bookDto = new BookDto(null, "Dune");
-//        Book book = new Book(3L, "Dune", 3L);
-//
-//        when(bookDtoMapper.toEntity(any())).thenReturn(Mono.just(book));
-//        when(bookService.save(any())).thenReturn(Mono.just(book));
-//
-//        webTestClient.post().uri("/api/books")
-//                .bodyValue(bookDto)
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody(Book.class)
-//                .isEqualTo(book);
-//    }
-//
-//    @Test
-//    void shouldDeleteBook() {
-//        when(bookService.deleteById(1L)).thenReturn(Mono.empty());
-//
-//        webTestClient.delete().uri("/api/books/1")
-//                .exchange()
-//                .expectStatus().isOk();
-//    }
+    @Test
+    void shouldGetAllBooks() {
+        Book book1 = new Book(1L, "title1", null, null);
+        Book book2 = new Book(2L, "title2", null, null);
+
+        BookDto bookDto1 = new BookDto(1L, "title1");
+        BookDto bookDto2 = new BookDto(2L, "title2");
+
+        when(bookService.findAll()).thenReturn(List.of(book1, book2));
+        when(bookDtoMapper.toDto(book1)).thenReturn(bookDto1);
+        when(bookDtoMapper.toDto(book2)).thenReturn(bookDto2);
+
+        webTestClient.get().uri("/api/books")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(BookDto.class)
+                .hasSize(2)
+                .contains(bookDto1, bookDto2);
+    }
+
+    @Test
+    void shouldSaveBook() {
+        BookDto bookDto = new BookDto(null, "title");
+        Book book = new Book(3L, "title", null, null);
+        BookDto savedBookDto = new BookDto(3L, "title");
+
+        when(bookDtoMapper.toEntity(any())).thenReturn(book);
+        when(bookService.save(any())).thenReturn(book);
+        when(bookDtoMapper.toDto(any())).thenReturn(savedBookDto);
+
+        webTestClient.post().uri("/api/books")
+                .bodyValue(bookDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BookDto.class)
+                .isEqualTo(savedBookDto);
+    }
+
+    @Test
+    void shouldDeleteBook() {
+        Long bookId = 1L;
+        doNothing().when(bookService).deleteById(bookId);
+
+        webTestClient.delete().uri("/api/books/" + bookId)
+                .exchange()
+                .expectStatus().isOk();
+
+        verify(bookService, times(1)).deleteById(bookId);
+    }
 }
