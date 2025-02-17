@@ -9,27 +9,30 @@ import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.repositories.AuthorRepository;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService{
+
     private final AuthorRepository authorRepository;
 
     @Transactional
     @Override
-    public Flux<Author> findAll() {
+    public List<Author> findAll() {
         return authorRepository.findAll();
     }
 
     @Transactional
     @Override
-    public Mono<Author> findByIdNN(long id) {
-        return authorRepository.findById(id).switchIfEmpty(Mono.error(() ->
-                new EntityNotFoundException(String.format("Author not found with id = %s", id))));
+    public Author findByIdNN(long id) {
+        return authorRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Author not found with id = %s", id)));
     }
 
     @Transactional
     @Override
-    public Mono<Author> save(Author author) {
+    public Author save(Author author) {
         return authorRepository.save(author);
     }
 }

@@ -20,28 +20,27 @@ public class BookRestController {
 
     @GetMapping
     public Flux<BookDto> getAllBooks() {
-        return bookService.findAll()
-                .flatMap(book -> bookDtoMapper.toDto(Mono.just(book)));
+        return Flux.defer(() -> Flux.fromIterable(bookService.findAll()))
+                .map(bookDtoMapper::toDto);
     }
 
     @PostMapping
-    public Mono<Book> saveBook(@RequestBody BookDto bookDto) {
-        return bookDtoMapper.toEntity(Mono.just(bookDto))
-                .flatMap(book -> bookService.save(Mono.just(book)));
+    public Mono<BookDto> saveBook(@RequestBody BookDto bookDto) {
+        return Mono.fromCallable(() -> bookService.save(bookDtoMapper.toEntity(bookDto)))
+                .map(bookDtoMapper::toDto);
     }
 
-
     @PutMapping("/{id}")
-    public Mono<Book> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
-        return bookService.findByIdNN(id)
-                .flatMap(existingBook -> {
-                    existingBook.setTitle(bookDto.getTitle());
-                    return bookService.save(Mono.just(existingBook));
-                });
+    public Mono<BookDto> updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
+        return Mono.fromCallable(() -> {
+            Book existingBook = bookService.findByIdNN(id);
+            existingBook.setTitle(bookDto.getTitle());
+            return bookService.save(existingBook);
+        }).map(bookDtoMapper::toDto);
     }
 
     @DeleteMapping("/{id}")
     public Mono<Void> deleteBook(@PathVariable Long id) {
-        return bookService.deleteById(id);
+        return Mono.fromRunnable(() -> bookService.deleteById(id)).then();
     }
 }

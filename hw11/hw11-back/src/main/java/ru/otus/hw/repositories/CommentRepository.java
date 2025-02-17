@@ -1,11 +1,12 @@
 package ru.otus.hw.repositories;
 
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
-import reactor.core.publisher.Flux;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.otus.hw.models.Comment;
 
-public interface CommentRepository extends R2dbcRepository<Comment, Long> {
+import java.util.List;
 
-    Flux<Comment> findByBookId(Long bookId);
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+
+    List<Comment> findByBookId(Long bookId);
 
 }

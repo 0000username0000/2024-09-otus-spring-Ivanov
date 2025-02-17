@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.mapper.dto.AuthorDtoMapper;
-import ru.otus.hw.models.Author;
 import ru.otus.hw.services.AuthorService;
 
 @RestController
@@ -21,7 +20,7 @@ public class AuthorRestController {
 
     @GetMapping
     public Flux<AuthorDto> getAllAuthors() {
-        Flux<Author> authors = authorService.findAll();
-        return authorDtoMapper.toDtoList(authors);
+        return Flux.defer(() -> Flux.fromIterable(authorService.findAll()))
+                .map(authorDtoMapper::toDto);
     }
 }

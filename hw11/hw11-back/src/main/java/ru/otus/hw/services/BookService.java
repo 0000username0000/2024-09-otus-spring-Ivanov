@@ -4,13 +4,15 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Book;
 
+import java.util.List;
+
 public interface BookService {
 
-    Mono<Book> findByIdNN(long id);
+    Book findByIdNN(long id);
 
-    Flux<Book> findAll();
+    List<Book> findAll();
 
-    Mono<Book> save(Mono<Book> book);
+    Book save(Book book);
 
-    Mono<Void> deleteById(long id);
+    void deleteById(long id);
 }

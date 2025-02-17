@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.mapper.dto.GenreDtoMapper;
-import ru.otus.hw.models.Genre;
 import ru.otus.hw.services.GenreService;
 
 @RestController
@@ -16,12 +15,11 @@ import ru.otus.hw.services.GenreService;
 public class GenreRestController {
 
     private final GenreService genreService;
-
     private final GenreDtoMapper genreDtoMapper;
 
     @GetMapping
     public Flux<GenreDto> getAllGenres() {
-        Flux<Genre> genres = genreService.findAll();
-        return genreDtoMapper.toDtoList(genres);
+        return Flux.defer(() -> Flux.fromIterable(genreService.findAll()))
+                .map(genreDtoMapper::toDto);
     }
 }
