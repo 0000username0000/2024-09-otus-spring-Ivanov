@@ -29,7 +29,8 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/main", "/genres", "/books/**", "/book-editor", "/book-create", "/authors").authenticated()
+                        .requestMatchers("/main", "/genres", "/books/**",
+                                "/book-editor", "/book-create", "/authors").authenticated()
                         .anyRequest().permitAll())
                 .anonymous(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
