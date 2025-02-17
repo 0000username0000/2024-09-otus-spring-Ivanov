@@ -15,6 +15,7 @@ import ru.otus.hw.services.GenreService;
 public class GenreRestController {
 
     private final GenreService genreService;
+
     private final GenreDtoMapper genreDtoMapper;
 
     @GetMapping
