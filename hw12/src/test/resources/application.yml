@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -5,20 +8,11 @@ spring:
     initialization-mode: always
     schema: classpath:schema.sql
     data: classpath:data.sql
-
   h2:
     console:
       enabled: true
       path: /h2-console
-
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
+      web-allow-others: false
 
 logging:
   level:

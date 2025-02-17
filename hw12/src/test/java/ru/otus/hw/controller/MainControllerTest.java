@@ -26,9 +26,15 @@ public class MainControllerTest {
     private UsersService usersService;
 
     @Test
-    public void testAuthenticatedOnAdmin() throws Exception {
+    public void testAccessToMainPageForAdmin() throws Exception {
         mockMvc.perform(get("/main")
                         .with(user("admin").authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAccessDeniedForUnauthenticatedUserToMainPage() throws Exception {
+        mockMvc.perform(get("/main"))
+                .andExpect(status().isUnauthorized());
     }
 }

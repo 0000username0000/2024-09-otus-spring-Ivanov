@@ -10,7 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.otus.hw.models.AnonymousUsers;
 import ru.otus.hw.services.UsersService;
 
 @EnableWebSecurity
@@ -30,16 +29,13 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/main", "/genres", "/books", "/book-editor", "/book-create", "/authors").authenticated()
-                        .requestMatchers("/h2-console/**").permitAll() // Разрешить доступ к H2 Console
+                        .requestMatchers("/main", "/genres", "/books/**", "/book-editor", "/book-create", "/authors").authenticated()
                         .anyRequest().permitAll())
-                .anonymous(anonymous -> anonymous
-                        .principal(new AnonymousUsers())
-                        .authorities("ROLE_ANONYMOUS"))
+                .anonymous(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(formLogin -> formLogin
-                        .defaultSuccessUrl("/main")
-                        .failureForwardUrl("/fail"))
+                        .defaultSuccessUrl("/main", true)
+                        .failureUrl("/fail"))
                 .userDetailsService(usersService);
 
         return httpSecurity.build();

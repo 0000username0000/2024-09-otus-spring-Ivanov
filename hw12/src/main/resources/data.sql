@@ -15,5 +15,8 @@ values (1, 1), (1, 2), (1, 3), (2, 1), (3, 1), (4, 5), (4, 6), (4, 7), (5, 7), (
 insert into comment(text, book_id)
 values ('first comment', 2), ('second comment', 2), ('third comment', 2);
 
-insert into users(username, password)
-values('admin', '$2a$10$ir4MmvR8Gk4IJGMokZtdOOpXwcCh6T67SINeoPRW.K8rwdzroR9Pi')
+insert into users(username, password, roles)
+values('admin', '$2a$10$ir4MmvR8Gk4IJGMokZtdOOpXwcCh6T67SINeoPRW.K8rwdzroR9Pi', 'ROLE_ADMIN');
+
+insert into users(username, password, roles)
+values('user', '$2a$10$ir4MmvR8Gk4IJGMokZtdOOpXwcCh6T67SINeoPRW.K8rwdzroR9Pi', 'ROLE_USER');
