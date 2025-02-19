@@ -8,15 +8,10 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.data.MongoItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
-import org.springframework.batch.item.file.FlatFileItemWriter;
-import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
-import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
-import ru.otus.hw.config.AppConfig;
 import ru.otus.hw.config.batch.processor.GenreProcessor;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.models.mongo.GenreDocument;
@@ -34,19 +29,6 @@ public class GenreBatchConfig {
                 .build();
     }
 
-    @StepScope
-    @Bean
-    public FlatFileItemWriter<GenreDocument> genreFileWriter(AppConfig appConfig) {
-        return new FlatFileItemWriterBuilder<GenreDocument>()
-                .name("genreFileWriter")
-                .resource(new FileSystemResource(appConfig.getGenreFilePath()))
-                .lineAggregator(new DelimitedLineAggregator<GenreDocument>() {{
-                    setDelimiter(",");
-                    setFieldExtractor(genre -> new Object[]{genre.getId(), genre.getName()});
-                }})
-                .build();
-    }
-
     @Bean
     public MongoItemWriter<GenreDocument> genreMongoWriter(MongoTemplate mongoTemplate) {
         MongoItemWriter<GenreDocument> writer = new MongoItemWriter<>();
@@ -58,13 +40,12 @@ public class GenreBatchConfig {
     @Bean
     public Step genreStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                           JpaPagingItemReader<Genre> reader,
-                          MongoItemWriter<GenreDocument> writer, FlatFileItemWriter<GenreDocument> fileWriter) {
+                          MongoItemWriter<GenreDocument> writer) {
         return new StepBuilder("genreStep", jobRepository)
                 .<Genre, GenreDocument>chunk(10, transactionManager)
                 .reader(reader)
                 .processor(genreProcessor())
                 .writer(writer)
-                .writer(fileWriter)
                 .build();
     }
 
@@ -73,4 +54,3 @@ public class GenreBatchConfig {
         return new GenreProcessor();
     }
 }
-

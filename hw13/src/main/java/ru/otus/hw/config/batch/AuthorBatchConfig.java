@@ -34,19 +34,6 @@ public class AuthorBatchConfig {
                 .build();
     }
 
-    @StepScope
-    @Bean
-    public FlatFileItemWriter<AuthorDocument> authorFileWriter(AppConfig appConfig) {
-        return new FlatFileItemWriterBuilder<AuthorDocument>()
-                .name("authorFileWriter")
-                .resource(new FileSystemResource(appConfig.getAuthorFilePath()))
-                .lineAggregator(new DelimitedLineAggregator<AuthorDocument>() {{
-                    setDelimiter(",");
-                    setFieldExtractor(author -> new Object[]{author.getId(), author.getFullName()});
-                }})
-                .build();
-    }
-
     @Bean
     public MongoItemWriter<AuthorDocument> authorMongoWriter(MongoTemplate mongoTemplate) {
         MongoItemWriter<AuthorDocument> writer = new MongoItemWriter<>();
@@ -58,13 +45,12 @@ public class AuthorBatchConfig {
     @Bean
     public Step authorStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                            JpaPagingItemReader<Author> reader,
-                           MongoItemWriter<AuthorDocument> writer, FlatFileItemWriter<AuthorDocument> fileWriter) {
+                           MongoItemWriter<AuthorDocument> writer) {
         return new StepBuilder("authorStep", jobRepository)
                 .<Author, AuthorDocument>chunk(10, transactionManager)
                 .reader(reader)
                 .processor(authorProcessor())
                 .writer(writer)
-                .writer(fileWriter)
                 .build();
     }
 

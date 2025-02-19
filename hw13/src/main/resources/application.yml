@@ -1,10 +1,21 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:data.sql
+  main:
+    allow-circular-references: true
+
+#  batch:
+#    job:
+#      enabled: false
+
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+
   data:
     mongodb:
       host: localhost
@@ -19,10 +30,20 @@ spring:
       hibernate:
         format_sql: true
 
-logging:
-  level:
-    ROOT: ERROR
+  datasource:
+    url: jdbc:h2:mem:testdb;
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    sql:
+      init:
+        mode: always
+        data-locations: classpath:data.sql
 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 de:
   flapdoodle:
     mongodb:
@@ -32,13 +53,14 @@ de:
 mongock:
   runner-type: "InitializingBean"
   change-logs-scan-package:
-    - ru.otus.hw.changelog
+    - ru.otus.example.springbatch.chandgelogs
   mongo-db:
     write-concern:
       journal: false
     read-concern: local
 
-batch:
-  genreFilePath: src/main/resources/output/genres.csv
-  authorFilePath: src/main/resources/output/authors.csv
-  bookFilePath: src/main/resources/output/books.csv
+logging:
+  level:
+        root: ERROR
+        Batch: INFO
+        ru.otus.example.springbatch: INFO
