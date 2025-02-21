@@ -18,7 +18,7 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional(readOnly = true)
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasPermission(#id, 'Book', 'READ')")
     public Optional<Book> findById(long id) {
         return bookRepository.findById(id);
     }
@@ -30,13 +30,13 @@ public class BookService {
     }
 
     @Transactional
-    @PreAuthorize("hasPermission(#noticeMessage, 'WRITE')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasPermission(#book.author, 'WRITE')")
     public void save(Book book) {
         bookRepository.save(book);
     }
 
     @Transactional
-    @PreAuthorize("hasPermission(#noticeMessage, 'WRITE')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasPermission(#id, 'Book', 'WRITE')")
     public void deleteById(long id) {
         bookRepository.deleteById(id);
     }

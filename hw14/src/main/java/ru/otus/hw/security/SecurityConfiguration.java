@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/public").permitAll()
-                        .requestMatchers("/main", "/genres", "/books/*", "/authors").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/main", "/genres", "/books", "/authors").hasAnyRole("ADMIN", "USER")
                         .anyRequest().hasRole("ADMIN")
                 )
                 .anonymous(Customizer.withDefaults())
