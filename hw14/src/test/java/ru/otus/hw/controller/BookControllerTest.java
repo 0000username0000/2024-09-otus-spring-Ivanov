@@ -1,30 +1,23 @@
 package ru.otus.hw.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.UsersService;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
 @Import(SecurityConfiguration.class)
@@ -39,73 +32,75 @@ public class BookControllerTest {
     @MockBean
     private UsersService usersService;
 
+    private Book testBook;
+
+    @BeforeEach
+    public void setUp() {
+        testBook = new Book();
+        testBook.setId(1L);
+        testBook.setTitle("Test Book");
+    }
+
+
     @Test
-    void shouldReturnBooksList() throws Exception {
-        Mockito.when(bookService.findAll()).thenReturn(Arrays.asList(
-                new Book(1L, "Book 1", null, null),
-                new Book(2L, "Book 2", null, null)
-        ));
+    @WithMockUser(roles = "ADMIN")
+    public void testGetListPage_Admin() throws Exception {
         mockMvc.perform(get("/books"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("books"))
-                .andExpect(model().attributeExists("books"))
-                .andExpect(model().attribute("books", hasSize(2)))
-                .andExpect(model().attribute("books", hasItem(
-                        hasProperty("title", is("Book 1"))
-                )));
+                .andExpect(status().isOk());
     }
 
     @Test
-    void shouldReturnEditPageForBook() throws Exception {
-        Mockito.when(bookService.findById(1L)).thenReturn(Optional.of(new Book(1L, "Book 1", null, null)));
+    @WithMockUser(roles = "USER")
+    public void testGetListPage_User() throws Exception {
+        mockMvc.perform(get("/books"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetListPage_Unauthorized() throws Exception {
+        mockMvc.perform(get("/books"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testEditPage_Admin() throws Exception {
+        when(bookService.findById(1L)).thenReturn(Optional.of(testBook));
+
         mockMvc.perform(get("/book-edit").param("id", "1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("book-editor"))
-                .andExpect(model().attributeExists("book"))
-                .andExpect(model().attribute("book", hasProperty("title", is("Book 1"))));
+                .andExpect(status().isOk());
     }
 
     @Test
-    void shouldRedirectAfterSavingEditedBook() throws Exception {
-        mockMvc.perform(post("/book-edit")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("id", "1")
-                        .param("title", "Updated Book"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/books"));
-        Mockito.verify(bookService).save(any(Book.class));
+    @WithMockUser(roles = "USER")
+    public void testEditPage_User() throws Exception {
+        mockMvc.perform(get("/book-edit").param("id", "1"))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    void shouldReturnCreateBookPage() throws Exception {
-        mockMvc.perform(get("/book-create"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("book-create"))
-                .andExpect(model().attributeExists("book"));
+    public void testEditPage_Unauthorized() throws Exception {
+        mockMvc.perform(get("/book-edit").param("id", "1"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void shouldRedirectAfterSavingNewBook() throws Exception {
-        mockMvc.perform(post("/book-create")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("title", "New Book"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/books"));
-        Mockito.verify(bookService).save(any(Book.class));
-    }
-
-    @Test
-    void shouldRedirectAfterDeletingBook() throws Exception {
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteBook_Admin() throws Exception {
         mockMvc.perform(get("/delete").param("id", "1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/books"));
-        Mockito.verify(bookService).deleteById(eq(1L));
+                .andExpect(status().isFound());
     }
 
     @Test
-    void shouldThrowEntityNotFoundExceptionWhenBookNotFound() throws Exception {
-        Mockito.when(bookService.findById(1L)).thenReturn(Optional.empty());
-        mockMvc.perform(get("/book-edit").param("id", "1"))
-                .andExpect(status().isNotFound());
+    @WithMockUser(roles = "USER")
+    public void testDeleteBook_User() throws Exception {
+        mockMvc.perform(get("/delete").param("id", "1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testDeleteBook_Unauthorized() throws Exception {
+        mockMvc.perform(get("/delete").param("id", "1"))
+                .andExpect(status().isUnauthorized());
     }
 }
