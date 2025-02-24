@@ -23,7 +23,6 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank
     @Column(name = "full_name", nullable = false)
     private String fullName;
 }

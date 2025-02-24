@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.services.dto.BookDtoService;
-import ru.otus.hw.services.BookServiceImpl;
+import ru.otus.hw.services.BookService;
+import ru.otus.hw.mapper.dto.BookDtoMapper;
 
 import java.util.List;
 
@@ -21,33 +21,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookRestController {
 
-    private final BookServiceImpl bookServiceImpl;
+    private final BookService bookService;
 
-    private final BookDtoService bookDtoService;
+    private final BookDtoMapper bookDtoMapper;
 
     @GetMapping
     public List<BookDto> getAllBooks() {
-        List<Book> books = bookServiceImpl.findAll();
-        return bookDtoService.toDtoList(books);
+        List<Book> books = bookService.findAll();
+        return bookDtoMapper.toDtoList(books);
     }
 
     @PostMapping
     public BookDto saveBook(@RequestBody BookDto bookDto) {
-        Book book = bookDtoService.toEntity(bookDto);
-        bookServiceImpl.save(book);
-        return bookDtoService.toDto(book);
+        Book book = bookDtoMapper.toEntity(bookDto);
+        bookService.save(book);
+        return bookDtoMapper.toDto(book);
     }
 
     @PutMapping("/{id}")
     public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
-        Book book = bookDtoService.toEntity(bookDto);
+        Book book = bookDtoMapper.toEntity(bookDto);
         book.setId(id);
-        bookServiceImpl.save(book);
-        return bookDtoService.toDto(book);
+        bookService.save(book);
+        return bookDtoMapper.toDto(book);
     }
 
     @DeleteMapping("/{id}")
     public void deleteBook(@PathVariable Long id) {
-        bookServiceImpl.deleteById(id);
+        bookService.deleteById(id);
     }
 }

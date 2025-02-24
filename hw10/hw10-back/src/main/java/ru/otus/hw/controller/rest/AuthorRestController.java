@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.services.AuthorServiceImpl;
-import ru.otus.hw.services.dto.AuthorDtoService;
+import ru.otus.hw.services.AuthorService;
+import ru.otus.hw.mapper.dto.AuthorDtoMapper;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorRestController {
 
-    private final AuthorServiceImpl authorServiceImpl;
+    private final AuthorService authorService;
 
-    private final AuthorDtoService authorDtoService;
+    private final AuthorDtoMapper authorDtoMapper;
 
     @GetMapping
     public List<AuthorDto> getAllAuthors() {
-        List<Author> authors = authorServiceImpl.findAll();
-        return authorDtoService.toDtoList(authors);
+        List<Author> authors = authorService.findAll();
+        return authorDtoMapper.toDtoList(authors);
     }
 }
