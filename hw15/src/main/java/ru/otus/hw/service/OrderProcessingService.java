@@ -19,12 +19,10 @@ public class OrderProcessingService {
     public ProcessedOrder finalizeOrder(Message<List<Item>> message) {
         List<Item> items = message.getPayload();
         Long orderId = (Long) message.getHeaders().get("orderId");
-
         return new ProcessedOrder(orderId, items, UUID.randomUUID().toString());
     }
 
     public void handleProcessedOrder(Message<List<Item>> message) {
         List<Item> items = message.getPayload();
-        // Логика обработки завершённого заказа
     }
 }
