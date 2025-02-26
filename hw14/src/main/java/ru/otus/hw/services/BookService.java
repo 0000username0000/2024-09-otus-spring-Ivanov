@@ -24,7 +24,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject, 'READ')")
     public List<Book> findAll() {
         return bookRepository.findAll();
     }

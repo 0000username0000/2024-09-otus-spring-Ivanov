@@ -15,8 +15,25 @@ values (1, 1), (1, 2), (1, 3), (2, 1), (3, 1), (4, 5), (4, 6), (4, 7), (5, 7), (
 insert into comment(text, book_id)
 values ('first comment', 2), ('second comment', 2), ('third comment', 2);
 
-insert into users(username, password, roles)
-values('admin', '$2a$10$ir4MmvR8Gk4IJGMokZtdOOpXwcCh6T67SINeoPRW.K8rwdzroR9Pi', 'ROLE_ADMIN');
+INSERT INTO roles (name) VALUES ('ADMIN'), ('USER'), ('EDITOR');
 
-insert into users(username, password, roles)
-values('user', '$2a$10$ir4MmvR8Gk4IJGMokZtdOOpXwcCh6T67SINeoPRW.K8rwdzroR9Pi', 'ROLE_USER');
+INSERT INTO users (username, password) VALUES
+('admin', '$2a$10$ir4MmvR8Gk4IJGMokZtdOOpXwcCh6T67SINeoPRW.K8rwdzroR9Pi'),
+('user', '$2a$10$ir4MmvR8Gk4IJGMokZtdOOpXwcCh6T67SINeoPRW.K8rwdzroR9Pi');
+
+INSERT INTO users_roles (user_id, role_id)
+VALUES (1, 1), (1, 2), (2, 2);
+
+INSERT INTO acl_entry (acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
+SELECT id, 1, (SELECT id FROM acl_sid WHERE sid = 'admin'), 1, 1, 1, 1
+FROM acl_object_identity;
+
+INSERT INTO acl_entry (acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
+SELECT id, 2, (SELECT id FROM acl_sid WHERE sid = 'admin'), 2, 1, 1, 1
+FROM acl_object_identity;
+
+INSERT INTO acl_entry (acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure)
+SELECT id, 3, (SELECT id FROM acl_sid WHERE sid = 'user'), 1, 1, 1, 1
+FROM acl_object_identity
+WHERE object_id_identity IN (1, 2, 3);
+
