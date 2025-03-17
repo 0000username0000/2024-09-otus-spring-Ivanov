@@ -1,4 +1,4 @@
-package ru.otus.hw.models;
+package ru.otus.hw.models.entities;
 
 
 import jakarta.persistence.CascadeType;
@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import ru.otus.hw.models.enums.OrderStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -36,7 +37,7 @@ public class Order implements Serializable {
 
     // Статусы: CREATED, PROCESSING, COMPLETED, CANCELLED
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
     @Column(nullable = false)
     private double totalPrice;
