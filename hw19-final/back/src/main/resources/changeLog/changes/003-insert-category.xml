@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="3" author="Artem">
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
+            <column name="name" value="Electronics"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440002"/>
+            <column name="name" value="Books"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440003"/>
+            <column name="name" value="Clothing"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440004"/>
+            <column name="name" value="Home and Garden"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440005"/>
+            <column name="name" value="Sports and Outdoors"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440006"/>
+            <column name="name" value="Toys and Games"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440007"/>
+            <column name="name" value="Health and Beauty"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440008"/>
+            <column name="name" value="Automotive"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440009"/>
+            <column name="name" value="Music"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440010"/>
+            <column name="name" value="Movies"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

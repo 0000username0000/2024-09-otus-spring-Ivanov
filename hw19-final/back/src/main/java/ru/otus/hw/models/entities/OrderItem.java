@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "order_items")
+@Table(name = "order_item")
 public class OrderItem implements Serializable {
 
     @Serial

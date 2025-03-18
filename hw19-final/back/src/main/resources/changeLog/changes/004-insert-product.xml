@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="4" author="Artem">
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440011"/>
+            <column name="name" value="Smartphone"/>
+            <column name="description" value="A cool smartphone"/>
+            <column name="price" value="599.99"/>
+            <column name="quantity" value="100"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440012"/>
+            <column name="name" value="Laptop"/>
+            <column name="description" value="A powerful laptop"/>
+            <column name="price" value="1299.99"/>
+            <column name="quantity" value="50"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440013"/>
+            <column name="name" value="Headphones"/>
+            <column name="description" value="Noise-cancelling headphones"/>
+            <column name="price" value="199.99"/>
+            <column name="quantity" value="200"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440014"/>
+            <column name="name" value="Fiction Book"/>
+            <column name="description" value="An exciting fiction book"/>
+            <column name="price" value="19.99"/>
+            <column name="quantity" value="300"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440015"/>
+            <column name="name" value="Non-fiction Book"/>
+            <column name="description" value="An insightful non-fiction book"/>
+            <column name="price" value="24.99"/>
+            <column name="quantity" value="150"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440016"/>
+            <column name="name" value="T-Shirt"/>
+            <column name="description" value="A comfortable cotton t-shirt"/>
+            <column name="price" value="14.99"/>
+            <column name="quantity" value="500"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440017"/>
+            <column name="name" value="Jeans"/>
+            <column name="description" value="Stylish denim jeans"/>
+            <column name="price" value="49.99"/>
+            <column name="quantity" value="200"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440018"/>
+            <column name="name" value="Coffee Maker"/>
+            <column name="description" value="A high-quality coffee maker"/>
+            <column name="price" value="89.99"/>
+            <column name="quantity" value="100"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440019"/>
+            <column name="name" value="Garden Hose"/>
+            <column name="description" value="A durable garden hose"/>
+            <column name="price" value="29.99"/>
+            <column name="quantity" value="300"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440020"/>
+            <column name="name" value="Basketball"/>
+            <column name="description" value="A professional basketball"/>
+            <column name="price" value="24.99"/>
+            <column name="quantity" value="150"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440021"/>
+            <column name="name" value="Tennis Racket"/>
+            <column name="description" value="A high-performance tennis racket"/>
+            <column name="price" value="99.99"/>
+            <column name="quantity" value="80"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440022"/>
+            <column name="name" value="Board Game"/>
+            <column name="description" value="A fun family board game"/>
+            <column name="price" value="34.99"/>
+            <column name="quantity" value="200"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440023"/>
+            <column name="name" value="Action Figure"/>
+            <column name="description" value="A collectible action figure"/>
+            <column name="price" value="19.99"/>
+            <column name="quantity" value="300"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440024"/>
+            <column name="name" value="Shampoo"/>
+            <column name="description" value="A nourishing shampoo"/>
+            <column name="price" value="9.99"/>
+            <column name="quantity" value="500"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440025"/>
+            <column name="name" value="Lipstick"/>
+            <column name="description" value="A vibrant lipstick"/>
+            <column name="price" value="14.99"/>
+            <column name="quantity" value="200"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440026"/>
+            <column name="name" value="Car Battery"/>
+            <column name="description" value="A reliable car battery"/>
+            <column name="price" value="129.99"/>
+            <column name="quantity" value="50"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440027"/>
+            <column name="name" value="Tire"/>
+            <column name="description" value="A durable car tire"/>
+            <column name="price" value="89.99"/>
+            <column name="quantity" value="100"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440028"/>
+            <column name="name" value="Guitar"/>
+            <column name="description" value="An acoustic guitar"/>
+            <column name="price" value="199.99"/>
+            <column name="quantity" value="70"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440029"/>
+            <column name="name" value="Violin"/>
+            <column name="description" value="A classical violin"/>
+            <column name="price" value="299.99"/>
+            <column name="quantity" value="40"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440030"/>
+            <column name="name" value="Action Movie"/>
+            <column name="description" value="An exciting action movie"/>
+            <column name="price" value="19.99"/>
+            <column name="quantity" value="200"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440031"/>
+            <column name="name" value="Comedy Movie"/>
+            <column name="description" value="A hilarious comedy movie"/>
+            <column name="price" value="14.99"/>
+            <column name="quantity" value="250"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440032"/>
+            <column name="name" value="Drama Movie"/>
+            <column name="description" value="A touching drama movie"/>
+            <column name="price" value="17.99"/>
+            <column name="quantity" value="150"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440033"/>
+            <column name="name" value="Blender"/>
+            <column name="description" value="A powerful kitchen blender"/>
+            <column name="price" value="49.99"/>
+            <column name="quantity" value="100"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440034"/>
+            <column name="name" value="Vacuum Cleaner"/>
+            <column name="description" value="A efficient vacuum cleaner"/>
+            <column name="price" value="149.99"/>
+            <column name="quantity" value="80"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440035"/>
+            <column name="name" value="Running Shoes"/>
+            <column name="description" value="Comfortable running shoes"/>
+            <column name="price" value="79.99"/>
+            <column name="quantity" value="200"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440036"/>
+            <column name="name" value="Yoga Mat"/>
+            <column name="description" value="A durable yoga mat"/>
+            <column name="price" value="24.99"/>
+            <column name="quantity" value="300"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440037"/>
+            <column name="name" value="Puzzle"/>
+            <column name="description" value="A challenging puzzle"/>
+            <column name="price" value="14.99"/>
+            <column name="quantity" value="400"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440038"/>
+            <column name="name" value="Face Cream"/>
+            <column name="description" value="A moisturizing face cream"/>
+            <column name="price" value="19.99"/>
+            <column name="quantity" value="250"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440039"/>
+            <column name="name" value="Car Tool Kit"/>
+            <column name="description" value="A complete car tool kit"/>
+            <column name="price" value="59.99"/>
+            <column name="quantity" value="100"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440040"/>
+            <column name="name" value="Electric Guitar"/>
+            <column name="description" value="A high-quality electric guitar"/>
+            <column name="price" value="399.99"/>
+            <column name="quantity" value="30"/>
+        </insert>
+
+        <!-- Electronics -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440011"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440001"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440012"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440001"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440013"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440001"/>
+        </insert>
+
+        <!-- Books -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440014"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440002"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440015"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440002"/>
+        </insert>
+
+
+        <!-- Clothing -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440016"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440003"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440017"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440003"/>
+        </insert>
+
+
+        <!-- Home and Garden -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440018"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440004"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440019"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440004"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440033"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440004"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440034"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440004"/>
+        </insert>
+
+
+        <!-- Sports and Outdoors -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440020"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440005"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440021"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440005"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440035"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440005"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440036"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440005"/>
+        </insert>
+
+
+        <!-- Toys and Games -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440022"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440006"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440023"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440006"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440037"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440006"/>
+        </insert>
+
+
+        <!-- Health and Beauty -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440024"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440007"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440025"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440007"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440038"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440007"/>
+        </insert>
+
+
+        <!-- Automotive -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440026"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440008"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440027"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440008"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440039"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440008"/>
+        </insert>
+
+
+        <!-- Music -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440028"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440009"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440029"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440009"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440040"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440009"/>
+        </insert>
+
+
+        <!-- Movies -->
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440030"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440010"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440031"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440010"/>
+        </insert>
+        <insert tableName="product_category">
+            <column name="product_id" value="550e8400-e29b-41d4-a716-446655440032"/>
+            <column name="category_id" value="550e8400-e29b-41d4-a716-446655440010"/>
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>

@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "products")
+@Table(name = "product")
 public class Product implements Serializable {
 
     @Serial

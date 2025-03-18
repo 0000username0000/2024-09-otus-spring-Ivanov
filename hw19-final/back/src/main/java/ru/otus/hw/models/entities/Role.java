@@ -1,34 +1,30 @@
 package ru.otus.hw.models.entities;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "categorie")
-public class Category implements Serializable {
+@Table(name = "role")
+public class Role implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 4204287293742656329L;
+    private static final long serialVersionUID = 2681930201733829563L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
-
-    @ManyToMany(mappedBy = "categories")
-    private Set<Product> products;
 }

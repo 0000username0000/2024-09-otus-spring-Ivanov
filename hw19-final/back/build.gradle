@@ -23,11 +23,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation "com.h2database:h2"
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.projectlombok:lombok'
-    implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'org.yaml:snakeyaml'
+
 
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation "org.liquibase:liquibase-core"
+    implementation "com.h2database:h2"
 
     runtimeOnly "org.postgresql:postgresql"
 
