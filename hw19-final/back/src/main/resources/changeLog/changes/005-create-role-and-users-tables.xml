@@ -6,7 +6,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="3" author="Artem">
-        <createTable tableName="role">
+        <createTable tableName="roles">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -15,7 +15,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="user">
+        <createTable tableName="users">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -40,12 +40,12 @@
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_user"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="users"/>
 
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_role"
                                  referencedColumnNames="id"
-                                 referencedTableName="role"/>
+                                 referencedTableName="roles"/>
     </changeSet>
 </databaseChangeLog>

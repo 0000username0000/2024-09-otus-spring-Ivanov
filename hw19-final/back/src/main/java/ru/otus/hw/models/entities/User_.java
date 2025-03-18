@@ -20,8 +20,8 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "user")
-public class User implements Serializable {
+@Table(name = "users")
+public class User_ implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -5621805109925613372L;
@@ -43,7 +43,7 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role_> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "categorie")
+@Table(name = "category")
 public class Category implements Serializable {
 
     @Serial

@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "order")
+@Table(name = "orders")
 public class Order implements Serializable {
 
     @Serial
@@ -44,7 +44,7 @@ public class Order implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private User_ user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<OrderItem> orderItems;
