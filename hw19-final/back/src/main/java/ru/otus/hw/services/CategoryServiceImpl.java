@@ -3,11 +3,11 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.entities.Category;
 import ru.otus.hw.repositories.CategoryRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,8 +24,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Category> findById(UUID id) {
-        return categoryRepository.findById(id);
+    public Category findByIdNN(UUID id) {
+        return categoryRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Category not found with id = %s", id)));
     }
 
     @Override

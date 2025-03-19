@@ -1,59 +1,56 @@
 package ru.otus.hw.controllers;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.web.bind.annotation.*;
+import ru.otus.hw.models.dto.CategoryDto;
 import ru.otus.hw.models.entities.Category;
 import ru.otus.hw.services.CategoryService;
+import ru.otus.hw.components.mappers.CategoryMapper;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${crossOrigins}")
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @GetMapping
-    public Flux<Category> getAllCategories() {
-        return Flux.fromIterable(categoryService.findAll());
+    public List<CategoryDto> getAllCategories() {
+        return categoryService.findAll().stream()
+                .map(categoryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Mono<Category> getCategoryById(@PathVariable UUID id) {
-        return Mono.justOrEmpty(categoryService.findById(id));
+    public CategoryDto getCategoryById(@PathVariable UUID id) {
+        Category category = categoryService.findByIdNN(id);
+        return categoryMapper.toDto(category);
     }
 
     @PostMapping
-    public Mono<Category> createCategory(@RequestParam String name) {
+    public CategoryDto createCategory(@RequestParam String name) {
         Category category = new Category();
         category.setName(name);
-        return Mono.just(categoryService.save(category));
+        Category savedCategory = categoryService.save(category);
+        return categoryMapper.toDto(savedCategory);
     }
 
     @PutMapping("/{id}")
-    public Mono<Category> updateCategory(@PathVariable UUID id, @RequestParam String name) {
-        return Mono.justOrEmpty(categoryService.findById(id))
-                .map(category -> {
-                    category.setName(name);
-                    return categoryService.save(category);
-                });
+    public CategoryDto updateCategory(@PathVariable UUID id, @RequestParam String name) {
+        Category category = categoryService.findByIdNN(id);
+        category.setName(name);
+        Category updatedCategory = categoryService.save(category);
+        return categoryMapper.toDto(updatedCategory);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<Void> deleteCategory(@PathVariable UUID id) {
-        return Mono.fromRunnable(() -> categoryService.deleteById(id));
+    public void deleteCategory(@PathVariable UUID id) {
+        categoryService.deleteById(id);
     }
 }

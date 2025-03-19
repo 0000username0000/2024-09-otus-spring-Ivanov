@@ -21,3 +21,5 @@ spring:
 logging:
   level:
     ROOT: ERROR
+
+crossOrigins: http://localhost:3000
