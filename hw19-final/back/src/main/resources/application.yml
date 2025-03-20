@@ -1,14 +1,14 @@
 spring:
-#  datasource:
-#    url: jdbc:h2:mem:testdb
+  datasource:
+    url: jdbc:h2:mem:testdb
   sql:
     init:
       mode: always
 
-  datasource:
-    url: jdbc:postgresql://db:5432/db
-    username: postgres
-    password: postgres
+#  datasource:
+#    url: jdbc:postgresql://db:5432/db
+#    username: postgres
+#    password: postgres
 
   liquibase:
     change-log: classpath:changeLog/master.xml
