@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-    @EntityGraph(attributePaths = {"categories"})
-    List<Product> findByCategories_Id(UUID uuid);
+    @EntityGraph(attributePaths = {"category"})
+    List<Product> findByCategory_Id(UUID uuid);
 
 }

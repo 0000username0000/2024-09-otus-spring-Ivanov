@@ -6,7 +6,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <include file="changes/001-create-product-and-category-tables.xml" relativeToChangelogFile="true"/>
-    <include file="changes/002-add-product-category-relation.xml" relativeToChangelogFile="true"/>
+<!--    <include file="changes/002-add-product-category-relation.xml" relativeToChangelogFile="true"/>-->
     <include file="changes/003-insert-category.xml" relativeToChangelogFile="true"/>
     <include file="changes/004-insert-product.xml" relativeToChangelogFile="true"/>
     <include file="changes/005-create-role-and-users-tables.xml" relativeToChangelogFile="true"/>
