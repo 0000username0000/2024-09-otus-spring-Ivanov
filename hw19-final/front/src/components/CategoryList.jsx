@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./table.css";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/categories")
       .then((response) => setCategories(response.data))
       .catch((error) => console.error("Error fetching categories:", error));
   }, []);
+
+  // Функция для перехода к продуктам категории
+  const handleViewProducts = (categoryId) => {
+    navigate(`/categories/${categoryId}/products`);
+  };
 
   return (
     <div>
@@ -29,7 +35,9 @@ const CategoryList = () => {
               <td>{category.id}</td>
               <td>{category.name}</td>
               <td>
-                <Link to={`/categories/${category.id}/products`}>View Products</Link>
+                <button onClick={() => handleViewProducts(category.id)}>
+                  View Products
+                </button>
               </td>
             </tr>
           ))}
