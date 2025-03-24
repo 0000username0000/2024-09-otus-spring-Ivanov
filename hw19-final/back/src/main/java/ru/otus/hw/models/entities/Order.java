@@ -12,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import ru.otus.hw.models.enums.OrderStatus;
 
 import java.io.Serial;
@@ -47,5 +49,7 @@ public class Order implements Serializable {
     private User_ user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<OrderItem> orderItems;
 }

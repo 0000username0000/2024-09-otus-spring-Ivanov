@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.otus.hw.models.dto.ProductDto;
 import ru.otus.hw.models.entities.Product;
 import ru.otus.hw.services.CategoryService;
+import ru.otus.hw.services.ProductService;
 
 @Component
 @AllArgsConstructor

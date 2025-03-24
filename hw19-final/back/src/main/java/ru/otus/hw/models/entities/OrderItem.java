@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -35,6 +37,8 @@ public class OrderItem implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Order order;
 
     @ManyToOne
