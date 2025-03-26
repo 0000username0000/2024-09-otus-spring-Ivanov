@@ -1,33 +1,40 @@
 package ru.otus.auth.services;
 
-import jakarta.security.auth.message.AuthException;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.lang.NonNull;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import ru.otus.auth.models.User;
-import ru.otus.auth.enums.Role;
+import ru.otus.auth.models.Role;
+import ru.otus.auth.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class UserService {
 
-    private final List<User> users;
+//    private final List<User> users;
 
-    public UserService() {
-        this.users = List.of(
-                new User("anton", "1234", "Антон", "Иванов", Collections.singleton(Role.USER)),
-                new User("ivan", "12345", "Сергей", "Петров", Collections.singleton(Role.ADMIN))
-        );
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+//        this.users = List.of(
+//                new User("anton", "1234", "Антон", "Иванов", Collections.singleton(Role.USER)),
+//                new User("ivan", "12345", "Сергей", "Петров", Collections.singleton(Role.ADMIN))
+//        );
     }
 
-    @SneakyThrows
-    public User getByLogin(@NonNull String login) {
-        return users.stream()
-                .filter(user -> login.equals(user.getLogin()))
-                .findFirst().orElseThrow(() -> new AuthException("Пользователь не найден"));
+//    @PostConstruct
+//    public void init() {
+//        userRepository.saveAll(List.of(
+//                User.builder().login("anton").password("1234").firstName("Антон").lastName("Иванов").roles("USER").build(),
+//                User.builder().login("ivan").password("12345").firstName("Сергей").lastName("Петров").roles(Collections.singleton(Role.ADMIN)).build()
+//        ));
+//    }
+
+    public User getByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 }

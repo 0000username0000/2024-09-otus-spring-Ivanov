@@ -3,6 +3,7 @@ package ru.otus.auth.services;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import ru.otus.auth.models.User;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -24,13 +26,18 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) {
+        log.info("Attempting login for user: {}", authRequest.getLogin());
+
         final User user = userService.getByLogin(authRequest.getLogin());
+        log.info("Found user: {}, password: {}", user.getLogin(), user.getPassword());
         if (user.getPassword().equals(authRequest.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getLogin(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         }
+
+        log.error("Password mismatch for user: {}", user.getLogin());
         throw new RuntimeException("Неправильный пароль");
     }
 

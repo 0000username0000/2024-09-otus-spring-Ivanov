@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import ru.otus.auth.models.JwtAuthentication;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Slf4j
 @Component
@@ -24,6 +26,8 @@ public class JwtFilter extends GenericFilterBean {
     private static final String AUTHORIZATION = "Authorization";
 
     private final JwtProvider jwtProvider;
+
+    private final JwtUtils jwtUtils;
 
 //    @Override
 //    public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc)
@@ -43,22 +47,21 @@ public class JwtFilter extends GenericFilterBean {
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        // Пропускаем запросы к аутентификации и странице входа
-        if (httpRequest.getRequestURI().startsWith("/api/auth/") ||
-                httpRequest.getRequestURI().equals("/login")) {
-            chain.doFilter(request, response);
-            return;
-        }
+        // Пробуем получить токен из куки
+        String token = Arrays.stream(httpRequest.getCookies())
+                .filter(c -> "token".equals(c.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
 
-        // Проверяем токен из параметра URL (для формы входа)
-        String token = httpRequest.getParameter("token");
+        // Если токен не найден в куки, проверяем заголовок Authorization
         if (token == null) {
             token = getTokenFromRequest(httpRequest);
         }
 
         if (token != null && jwtProvider.validateAccessToken(token)) {
             Claims claims = jwtProvider.getAccessClaims(token);
-            JwtAuthentication auth = JwtUtils.generate(claims);
+            JwtAuthentication auth = jwtUtils.generate(claims);
             auth.setAuthenticated(true);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
