@@ -11,5 +11,5 @@
     <include file="changes/004-insert-product.xml" relativeToChangelogFile="true"/>
     <include file="changes/005-create-role-and-users-tables.xml" relativeToChangelogFile="true"/>
     <include file="changes/006-create-order-and-order-item-tables.xml" relativeToChangelogFile="true"/>
-    <include file="changes/007-insert-roles-and-users.xml" relativeToChangelogFile="true"/>
+<!--    <include file="changes/007-insert-roles-and-users.xml" relativeToChangelogFile="true"/>-->
 </databaseChangeLog>

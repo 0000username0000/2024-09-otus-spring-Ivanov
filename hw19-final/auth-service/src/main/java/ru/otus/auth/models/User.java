@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -25,9 +26,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(name = "login", nullable = false, unique = true)
     private String login;

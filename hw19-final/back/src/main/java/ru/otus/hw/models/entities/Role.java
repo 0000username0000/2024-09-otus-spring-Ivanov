@@ -1,30 +1,34 @@
 package ru.otus.hw.models.entities;
 
+import lombok.Data;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.UUID;
 
-@Entity
 @Data
+@Entity
 @Table(name = "roles")
-public class Role_ implements Serializable {
+public class Role implements GrantedAuthority {
 
     @Serial
-    private static final long serialVersionUID = 2681930201733829563L;
+    private static final long serialVersionUID = 1410998928414592994L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
+    @GeneratedValue
     private UUID id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 }

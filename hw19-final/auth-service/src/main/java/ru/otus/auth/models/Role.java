@@ -9,13 +9,16 @@ package ru.otus.auth.models;
  import jakarta.persistence.Table;
  import org.springframework.security.core.GrantedAuthority;
 
+ import java.util.UUID;
+
 @Data
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     private String name;
