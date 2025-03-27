@@ -35,6 +35,6 @@ public class UserService {
 
     public User getByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+                .orElseThrow(() -> new RuntimeException(String.format("Пользователь не найден: %s", login)));
     }
 }

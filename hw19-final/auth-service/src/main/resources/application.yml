@@ -2,11 +2,15 @@ server:
   port: 8081  # Запуск на порту 8081
 
 spring:
+#  datasource:
+#    url: jdbc:h2:mem:security-db
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
   datasource:
-    url: jdbc:h2:mem:security-db
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://db:5432/db
+    username: postgres
+    password: postgres
   jpa:
     hibernate:
       ddl-auto: none

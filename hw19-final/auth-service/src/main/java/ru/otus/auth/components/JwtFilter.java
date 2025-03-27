@@ -46,29 +46,37 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String token = null;
 
-        // Пробуем получить токен из куки
-        String token = Arrays.stream(httpRequest.getCookies())
-                .filter(c -> "token".equals(c.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
+        // 1. Пробуем получить токен из куки (с проверкой на null)
+        Cookie[] cookies = httpRequest.getCookies();
+        if (cookies != null) {
+            token = Arrays.stream(cookies)
+                    .filter(c -> "token".equals(c.getName()))
+                    .findFirst()
+                    .map(Cookie::getValue)
+                    .orElse(null);
+        }
 
-        // Если токен не найден в куки, проверяем заголовок Authorization
+        // 2. Если токен не найден в куки, проверяем заголовок Authorization
         if (token == null) {
             token = getTokenFromRequest(httpRequest);
         }
 
+        // 3. Если токен найден и валиден, устанавливаем аутентификацию
         if (token != null && jwtProvider.validateAccessToken(token)) {
-            Claims claims = jwtProvider.getAccessClaims(token);
-            JwtAuthentication auth = jwtUtils.generate(claims);
-            auth.setAuthenticated(true);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            try {
+                Claims claims = jwtProvider.getAccessClaims(token);
+                JwtAuthentication auth = jwtUtils.generate(claims);
+                auth.setAuthenticated(true);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } catch (Exception e) {
+                log.error("Failed to set authentication", e);
+            }
         }
 
         chain.doFilter(request, response);
     }
-
 
     private String getTokenFromRequest(HttpServletRequest request) {
         final String bearer = request.getHeader(AUTHORIZATION);
