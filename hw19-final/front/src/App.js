@@ -1,9 +1,16 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 import CategoryList from "./components/CategoryList";
 import OrderList from "./components/OrderList";
 import ProductList from "./components/ProductList";
 import ProductDetails from "./components/ProductDetails";
+import Login from "./components/Login";
+import Logout from './components/Logout';
+
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = !!localStorage.getItem('accessToken');
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 const App = () => {
   return (
@@ -15,15 +22,39 @@ const App = () => {
           <li><Link to="/categories">Categories</Link></li>
           <li><Link to="/orders">Orders</Link></li>
         </ul>
+        <div className="logout-container">
+          <Logout />
+        </div>
       </nav>
 
       <div className="content">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/categories" element={<CategoryList />} />
-          <Route path="/categories/:categoryId/products" element={<ProductList />} />
-          <Route path="/products/:productId" element={<ProductDetails />} />
-          <Route path="/orders" element={<OrderList />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          } />
+          <Route path="/categories" element={
+            <PrivateRoute>
+              <CategoryList />
+            </PrivateRoute>
+          } />
+          <Route path="/categories/:categoryId/products" element={
+            <PrivateRoute>
+              <ProductList />
+            </PrivateRoute>
+          } />
+          <Route path="/products/:productId" element={
+            <PrivateRoute>
+              <ProductDetails />
+            </PrivateRoute>
+          } />
+          <Route path="/orders" element={
+            <PrivateRoute>
+              <OrderList />
+            </PrivateRoute>
+          } />
         </Routes>
       </div>
     </div>
