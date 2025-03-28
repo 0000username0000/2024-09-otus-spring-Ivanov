@@ -12,7 +12,7 @@ import ru.otus.auth.dto.RefreshJwtRequest;
 import ru.otus.auth.services.AuthService;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

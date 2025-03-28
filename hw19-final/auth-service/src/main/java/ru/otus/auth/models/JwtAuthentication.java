@@ -18,6 +18,8 @@ public class JwtAuthentication implements Authentication {
 
     private String firstName;
 
+    private String userId;
+
     private Set<Role> roles;
 
     @Override

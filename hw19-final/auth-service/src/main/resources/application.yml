@@ -1,5 +1,5 @@
 server:
-  port: 8081  # Запуск на порту 8081
+  port: 8081
 
 spring:
 #  datasource:
@@ -8,7 +8,8 @@ spring:
 #    password:
 #    driver-class-name: org.h2.Driver
   datasource:
-    url: jdbc:postgresql://db:5432/db
+#    url: jdbc:postgresql://db:5432/db
+    url: jdbc:postgresql://localhost:5432/db
     username: postgres
     password: postgres
   jpa:
@@ -21,7 +22,7 @@ spring:
       path: /h2-console
   liquibase:
     change-log: classpath:changelog/master.xml
-    enabled: true
+    enabled: false
     user: sa
     password:
     url: jdbc:h2:mem:security-db

@@ -12,7 +12,7 @@ public class Application {
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(Application.class, args);
         System.out.printf("Link: %n%s%n", "http://localhost:8081/login");
-        Console.main();
+//        Console.main();
     }
 
 }
