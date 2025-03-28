@@ -2,10 +2,17 @@ import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import CategoryList from "./components/CategoryList";
 import OrderList from "./components/OrderList";
+import OrderDetails from "./components/OrderDetails"; // Импортируем новый компонент
 import ProductList from "./components/ProductList";
 import ProductDetails from "./components/ProductDetails";
 import Login from "./components/Login";
 import Logout from './components/Logout';
+
+const HomePage = () => (
+  <div className="home-page">
+    <h1>Welcome to E-Commerce Admin Panel</h1>
+  </div>
+);
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('accessToken');
@@ -55,16 +62,15 @@ const App = () => {
               <OrderList />
             </PrivateRoute>
           } />
+          <Route path="/orders/:orderId" element={
+            <PrivateRoute>
+              <OrderDetails />
+            </PrivateRoute>
+          } />
         </Routes>
       </div>
     </div>
   );
 };
-
-const HomePage = () => (
-  <div className="home-page">
-    <h1>Welcome to E-Commerce Admin Panel</h1>
-  </div>
-);
 
 export default App;

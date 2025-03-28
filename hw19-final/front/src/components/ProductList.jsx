@@ -18,14 +18,14 @@ const ProductList = () => {
 
   // Загрузка продуктов
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/products/category/${categoryId}`)
+    axios.get(`/api/products/category/${categoryId}`)
       .then((response) => setProducts(response.data))
       .catch((error) => console.error("Error fetching products:", error));
   }, [categoryId]);
 
   // Обработчик добавления продукта
   const handleAddProduct = () => {
-    axios.post(`http://localhost:8080/api/products`, { ...newProduct, categoryId })
+    axios.post(`/api/products`, { ...newProduct, categoryId })
       .then((response) => {
         setProducts([...products, response.data]);
         setIsAddModalOpen(false);
@@ -42,7 +42,7 @@ const ProductList = () => {
 
   // Обработчик сохранения изменений
   const handleSaveProduct = () => {
-    axios.put(`http://localhost:8080/api/products/${editingProduct.id}`, editingProduct)
+    axios.put(`/api/products/${editingProduct.id}`, editingProduct)
       .then((response) => {
         setProducts(products.map((p) => (p.id === editingProduct.id ? response.data : p)));
         setIsEditModalOpen(false);
@@ -53,7 +53,7 @@ const ProductList = () => {
 
   // Обработчик удаления продукта
   const handleDeleteProduct = (productId) => {
-    axios.delete(`http://localhost:8080/api/products/${productId}`)
+    axios.delete(`h/api/products/${productId}`)
       .then(() => {
         setProducts(products.filter((p) => p.id !== productId));
       })

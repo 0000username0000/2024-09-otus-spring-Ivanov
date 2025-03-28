@@ -19,10 +19,10 @@ const OrderList = () => {
     const navigate = useNavigate();
 
     const orderStatuses = [
-        { value: 'CREATED', label: 'Создан' },
-        { value: 'PROCESSING', label: 'В процессе' },
-        { value: 'COMPLETED', label: 'Завершен' },
-        { value: 'CANCELLED', label: 'Отменен' }
+        { value: 'CREATED', label: 'Created' },
+        { value: 'PROCESSING', label: 'Processing' },
+        { value: 'COMPLETED', label: 'Completed' },
+        { value: 'CANCELLED', label: 'Cancelled' }
     ];
 
     const getStatusDescription = (status) => {
@@ -34,8 +34,8 @@ const OrderList = () => {
         const fetchData = async () => {
             try {
                 const [ordersRes, productsRes] = await Promise.all([
-                    axios.get('http://localhost:8080/api/orders'),
-                    axios.get('http://localhost:8080/api/products')
+                    axios.get('/api/orders'),
+                    axios.get('/api/products')
                 ]);
                 setOrders(ordersRes.data);
                 setProducts(productsRes.data);
@@ -51,7 +51,7 @@ const OrderList = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/orders/${id}`);
+            await axios.delete(`/api/orders/${id}`);
             setOrders(orders.filter(order => order.id !== id));
         } catch (err) {
             setError(err.message);
@@ -127,36 +127,32 @@ const OrderList = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const token = localStorage.getItem('accessToken');
+            const payload = JSON.parse(atob(token.split('.')[1]));
+
             const orderData = {
                 status: formData.status,
+                userId: payload.userId,
                 orderItems: formData.orderItems.map(item => ({
                     productId: item.productId,
                     quantity: item.quantity,
-                    price: item.price
+                    price: item.price,
+                    productName: item.productName
                 })),
                 totalPrice: formData.totalPrice
             };
 
-            let response;
-            if (editingOrder) {
-                response = await axios.put(
-                    `http://localhost:8080/api/orders/${editingOrder.id}`,
-                    orderData
-                );
-                setOrders(orders.map(order =>
-                    order.id === response.data.id ? response.data : order
-                ));
-            } else {
-                response = await axios.post(
-                    'http://localhost:8080/api/orders',
-                    orderData
-                );
-                setOrders([...orders, response.data]);
-            }
+            const response = await axios.post('/api/orders', orderData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
+            setOrders([...orders, response.data]);
             setIsModalOpen(false);
         } catch (err) {
-            setError(err.response?.data?.message || err.message);
+            setError(err.response?.data?.message || "Error creating order");
         }
     };
 
@@ -164,12 +160,12 @@ const OrderList = () => {
         navigate(`/orders/${orderId}`);
     };
 
-    if (loading) return <div>Загрузка...</div>;
-    if (error) return <div>Ошибка: {error}</div>;
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div className="order-container">
-            <h2>Управление заказами</h2>
+            <h2>Order Management</h2>
 
             <button
                 className="add-button"
@@ -183,24 +179,24 @@ const OrderList = () => {
                     setIsModalOpen(true);
                 }}
             >
-                Добавить новый заказ
+                Create New Order
             </button>
 
             <table className="order-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Дата заказа</th>
-                        <th>Статус</th>
-                        <th>Сумма</th>
-                        <th>Товаров</th>
-                        <th>Действия</th>
+                        <th>Order Number</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Items Count</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {orders.map(order => (
                         <tr key={order.id}>
-                            <td>{order.id}</td>
+                            <td>{order.orderNumber}</td>
                             <td>{new Date(order.orderDate).toLocaleString()}</td>
                             <td>{getStatusDescription(order.status)}</td>
                             <td>{order.totalPrice.toFixed(2)} ₽</td>
@@ -210,19 +206,19 @@ const OrderList = () => {
                                     className="view-btn"
                                     onClick={() => handleViewDetails(order.id)}
                                 >
-                                    Просмотр
+                                    View
                                 </button>
                                 <button
                                     className="edit-btn"
                                     onClick={() => handleEdit(order)}
                                 >
-                                    Редактировать
+                                    Edit
                                 </button>
                                 <button
                                     className="delete-btn"
                                     onClick={() => handleDelete(order.id)}
                                 >
-                                    Удалить
+                                    Delete
                                 </button>
                             </td>
                         </tr>
@@ -243,11 +239,11 @@ const OrderList = () => {
                             &times;
                         </span>
 
-                        <h2>{editingOrder ? 'Редактировать заказ' : 'Добавить новый заказ'}</h2>
+                        <h2>{editingOrder ? 'Edit Order' : 'Create New Order'}</h2>
 
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <label>Статус:</label>
+                                <label>Status:</label>
                                 <select
                                     name="status"
                                     value={formData.status}
@@ -262,17 +258,17 @@ const OrderList = () => {
                                 </select>
                             </div>
 
-                            <h3>Товары в заказе:</h3>
+                            <h3>Order Items:</h3>
                             {formData.orderItems.map((item, index) => (
                                 <div key={index} className="product-row">
                                     <div className="form-group">
-                                        <label>Товар:</label>
+                                        <label>Product:</label>
                                         <select
                                             value={item.productId}
                                             onChange={(e) => handleProductSelect(e, index)}
                                             required
                                         >
-                                            <option value="">Выберите товар</option>
+                                            <option value="">Select product</option>
                                             {products.map(product => (
                                                 <option
                                                     key={product.id}
@@ -281,14 +277,14 @@ const OrderList = () => {
                                                         idx !== index && i.productId === product.id
                                                     )}
                                                 >
-                                                    {product.name} ({product.price} ₽, доступно: {product.quantity})
+                                                    {product.name} ({product.price} ₽, available: {product.quantity})
                                                 </option>
                                             ))}
                                         </select>
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Количество:</label>
+                                        <label>Quantity:</label>
                                         <input
                                             type="number"
                                             min="1"
@@ -302,7 +298,7 @@ const OrderList = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Цена за единицу:</label>
+                                        <label>Unit Price:</label>
                                         <input
                                             type="number"
                                             value={item.price || 0}
@@ -311,7 +307,7 @@ const OrderList = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        <label>Сумма:</label>
+                                        <label>Total:</label>
                                         <input
                                             type="number"
                                             value={(item.price * (item.quantity || 0)).toFixed(2)}
@@ -324,7 +320,7 @@ const OrderList = () => {
                                         className="remove-btn"
                                         onClick={() => removeProductRow(index)}
                                     >
-                                        Удалить
+                                        Remove
                                     </button>
                                 </div>
                             ))}
@@ -334,11 +330,11 @@ const OrderList = () => {
                                 className="add-product-btn"
                                 onClick={addProductRow}
                             >
-                                Добавить товар
+                                Add Product
                             </button>
 
                             <div className="form-group total-price">
-                                <label>Общая сумма:</label>
+                                <label>Grand Total:</label>
                                 <input
                                     type="number"
                                     value={formData.totalPrice.toFixed(2)}
@@ -348,7 +344,7 @@ const OrderList = () => {
                             </div>
 
                             <button type="submit" className="submit-btn">
-                                {editingOrder ? 'Обновить' : 'Создать'}
+                                {editingOrder ? 'Update' : 'Create'}
                             </button>
                         </form>
                     </div>
