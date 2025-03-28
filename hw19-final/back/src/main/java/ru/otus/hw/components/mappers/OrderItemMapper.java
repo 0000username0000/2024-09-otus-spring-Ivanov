@@ -19,6 +19,7 @@ public class OrderItemMapper {
         dto.setPrice(orderItem.getPrice());
         dto.setOrderId(orderItem.getOrder().getId());
         dto.setProductId(orderItem.getProduct().getId());
+        dto.setProductName(orderItem.getProduct().getName());
         return dto;
     }
 

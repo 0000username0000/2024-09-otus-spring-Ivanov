@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   frontend:
     container_name: frontend
@@ -8,6 +10,7 @@ services:
       - "3000:80"
     depends_on:
       - backend
+      - auth-service
     networks:
       - app-network
 
@@ -24,7 +27,35 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
     depends_on:
       db:
-        condition: service_healthy  # Ждем, пока БД будет готова
+        condition: service_healthy
+    networks:
+      - app-network
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SERVER_PORT=8081
+      - JWT_SECRET_ACCESS=qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w==
+      - JWT_SECRET_REFRESH=zL1HB3Pch05Avfynovxrf/kpF9O2m4NCWKJUjEp27s9J2jEG3ifiKCGylaZ8fDeoONSTJP/wAzKawB8F9rOMNg==
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
     networks:
       - app-network
 
@@ -39,7 +70,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - app-network
-    healthcheck:  # Проверка готовности БД
+    healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       retries: 5

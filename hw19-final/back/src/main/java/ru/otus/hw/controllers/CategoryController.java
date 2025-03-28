@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     private final CategoryService categoryService;
+
     private final CategoryMapper categoryMapper;
 
     @GetMapping
@@ -34,9 +35,9 @@ public class CategoryController {
     }
 
     @PostMapping
-    public CategoryDto createCategory(@RequestParam String name) {
+    public CategoryDto createCategory(@RequestBody CategoryDto categoryDto) {
         Category category = new Category();
-        category.setName(name);
+        category.setName(categoryDto.getName());
         Category savedCategory = categoryService.save(category);
         return categoryMapper.toDto(savedCategory);
     }

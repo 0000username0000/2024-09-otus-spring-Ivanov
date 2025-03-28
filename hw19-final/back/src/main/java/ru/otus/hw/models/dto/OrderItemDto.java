@@ -17,4 +17,6 @@ public class OrderItemDto {
     private UUID orderId;
 
     private UUID productId;
+
+    private String productName;
 }

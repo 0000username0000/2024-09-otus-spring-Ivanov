@@ -5,7 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <!-- Сначала создаем таблицы -->
     <changeSet id="1" author="Artem">
         <createTable tableName="roles">
             <column name="id" type="UUID">
@@ -63,8 +62,7 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
-    <!-- Затем заполняем данными -->
-    <changeSet id="4" author="your_name">
+    <changeSet id="4" author="Artem">
         <insert tableName="roles">
             <column name="id" value="11111111-1111-1111-1111-111111111111"/>
             <column name="name" value="USER"/>
@@ -75,7 +73,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="5" author="your_name">
+    <changeSet id="5" author="Artem">
         <insert tableName="users">
             <column name="id" value="33333333-3333-3333-3333-333333333333"/>
             <column name="login" value="anton"/>

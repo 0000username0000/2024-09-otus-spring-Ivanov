@@ -12,6 +12,8 @@ public class OrderDto {
 
     private UUID id;
 
+    private String orderNumber;
+
     private LocalDateTime orderDate;
 
     private OrderStatus status;
@@ -19,6 +21,8 @@ public class OrderDto {
     private double totalPrice;
 
     private UUID userId;
+
+    private String userName;
 
     private Set<OrderItemDto> orderItems;
 }

@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,8 +20,12 @@ import ru.otus.hw.models.enums.OrderStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
 @Data
@@ -33,6 +38,9 @@ public class Order implements Serializable {
     @Id
     @GeneratedValue
     private UUID id;
+
+    @Column(nullable = false, unique = true)
+    private String orderNumber;
 
     @Column(nullable = false)
     private LocalDateTime orderDate;
@@ -52,4 +60,15 @@ public class Order implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<OrderItem> orderItems;
+
+    @PrePersist
+    public void generateOrderNumber() {
+        if (Objects.isNull(this.orderNumber)) {
+            this.orderNumber = String.format("ORD-%d-%03d",
+                    System.currentTimeMillis(),
+                    ThreadLocalRandom.current().nextInt(1000)
+            );
+            System.out.println("Generated order number: " + this.orderNumber);
+        }
+    }
 }

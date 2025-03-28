@@ -9,6 +9,7 @@ import ru.otus.hw.models.entities.OrderItem;
 import ru.otus.hw.services.UserService;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,6 +30,8 @@ public class OrderMapper {
         dto.setStatus(order.getStatus());
         dto.setTotalPrice(order.getTotalPrice());
         dto.setUserId(order.getUser().getId());
+        dto.setUserName(order.getUser().getLastName());
+        dto.setOrderNumber(order.getOrderNumber());
         dto.setOrderItems(order.getOrderItems().stream()
                 .map(orderItemMapper::toDto)
                 .collect(Collectors.toSet()));
@@ -38,16 +41,16 @@ public class OrderMapper {
     public Order toEntity(OrderDto dto) {
         Order order = new Order();
         order.setId(dto.getId());
-        order.setOrderDate(dto.getOrderDate() != null ? dto.getOrderDate() : LocalDateTime.now());
+        order.setOrderDate(Objects.nonNull(dto.getOrderDate()) ? dto.getOrderDate() : LocalDateTime.now());
         order.setStatus(dto.getStatus());
         order.setTotalPrice(dto.getTotalPrice());
 
-        order.setUser(userService.findByIdNN(UUID.fromString("450e8400-e29b-41d4-a716-446655440000")));
+        order.setUser(userService.findByIdNN(dto.getUserId()));
 
         Set<OrderItem> orderItems = dto.getOrderItems().stream()
                 .map(itemDto -> {
                     OrderItem item = orderItemMapper.toEntity(itemDto);
-                    item.setOrder(order); // Устанавливаем связь с Order
+                    item.setOrder(order);
                     return item;
                 })
                 .collect(Collectors.toSet());

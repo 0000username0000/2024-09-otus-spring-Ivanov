@@ -10,6 +10,10 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <!-- Добавленная колонка -->
+            <column name="order_number" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
             <column name="order_date" type="timestamp">
                 <constraints nullable="false"/>
             </column>
