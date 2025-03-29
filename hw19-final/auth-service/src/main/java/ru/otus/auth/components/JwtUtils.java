@@ -3,6 +3,7 @@ package ru.otus.auth.components;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.otus.auth.exceptions.JwtClaimProcessingException;
 import ru.otus.auth.models.JwtAuthentication;
 
 
@@ -18,11 +19,14 @@ public final class JwtUtils {
     private final RoleService roleService;
 
     public JwtAuthentication generate(Claims claims) {
+
         final JwtAuthentication jwtInfoToken = new JwtAuthentication();
+
         jwtInfoToken.setRoles(getRoles(claims));
         jwtInfoToken.setFirstName(claims.get("firstName", String.class));
         jwtInfoToken.setUsername(claims.getSubject());
         jwtInfoToken.setUserId(claims.get("userId", String.class));
+
         return jwtInfoToken;
     }
 
@@ -30,11 +34,11 @@ public final class JwtUtils {
     private Set<Role> getRoles(Claims claims) {
         try {
             List<String> roleNames = claims.get("roles", List.class);
-            // Загружаем все роли одним запросом
             return roleService.findAllByNameIn(roleNames);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Failed to parse roles from JWT claims", e);
+            throw new JwtClaimProcessingException("Failed to parse roles from JWT claims", e);
         }
     }
+
 
 }

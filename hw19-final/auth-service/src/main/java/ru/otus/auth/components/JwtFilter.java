@@ -3,74 +3,75 @@ package ru.otus.auth.components;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 import ru.otus.auth.models.JwtAuthentication;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends GenericFilterBean {
+public class JwtFilter extends OncePerRequestFilter {
 
-    private static final String AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String TOKEN_COOKIE_NAME = "token";
 
     private final JwtProvider jwtProvider;
-
     private final JwtUtils jwtUtils;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String token = null;
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain)
+            throws ServletException, IOException {
 
-        // 1. Пробуем получить токен из куки (с проверкой на null)
-        Cookie[] cookies = httpRequest.getCookies();
-        if (cookies != null) {
-            token = Arrays.stream(cookies)
-                    .filter(c -> "token".equals(c.getName()))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
+        try {
+            extractToken(request)
+                    .filter(jwtProvider::validateAccessToken)
+                    .ifPresent(this::authenticateWithToken);
+        } catch (Exception e) {
+            log.error("JWT processing error", e);
+            SecurityContextHolder.clearContext();
         }
 
-        // 2. Если токен не найден в куки, проверяем заголовок Authorization
-        if (token == null) {
-            token = getTokenFromRequest(httpRequest);
-        }
-
-        // 3. Если токен найден и валиден, устанавливаем аутентификацию
-        if (token != null && jwtProvider.validateAccessToken(token)) {
-            try {
-                Claims claims = jwtProvider.getAccessClaims(token);
-                JwtAuthentication auth = jwtUtils.generate(claims);
-                auth.setAuthenticated(true);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                log.error("Failed to set authentication", e);
-            }
-        }
-
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
-        final String bearer = request.getHeader(AUTHORIZATION);
-        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
-        }
-        return null;
+    private Optional<String> extractToken(HttpServletRequest request) {
+        return extractTokenFromCookie(request)
+                .or(() -> extractTokenFromHeader(request));
     }
 
+    private Optional<String> extractTokenFromCookie(HttpServletRequest request) {
+        return Optional.ofNullable(request.getCookies())
+                .stream()
+                .flatMap(Arrays::stream)
+                .filter(c -> TOKEN_COOKIE_NAME.equals(c.getName()))
+                .findFirst()
+                .map(Cookie::getValue);
+    }
+
+    private Optional<String> extractTokenFromHeader(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader(AUTHORIZATION_HEADER))
+                .filter(header -> header.startsWith(BEARER_PREFIX))
+                .map(header -> header.substring(BEARER_PREFIX.length()));
+    }
+
+    private void authenticateWithToken(String token) {
+        Claims claims = jwtProvider.getAccessClaims(token);
+        JwtAuthentication authentication = jwtUtils.generate(claims);
+        authentication.setAuthenticated(true);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 }

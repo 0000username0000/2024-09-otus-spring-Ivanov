@@ -26,10 +26,15 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
+
+    private static final int ACCESS_TOKEN_EXPIRATION_MINUTES = 50;
+    private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 30;
+
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
 
     public JwtProvider(
+
             @Value("${jwt.secret.access}") String jwtAccessSecret,
             @Value("${jwt.secret.refresh}") String jwtRefreshSecret
     ) {
@@ -38,9 +43,10 @@ public class JwtProvider {
     }
 
     public String generateAccessToken(@NonNull User user) {
-        final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(50).atZone(ZoneId.systemDefault()).toInstant();
-        final Date accessExpiration = Date.from(accessExpirationInstant);
+        LocalDateTime now = LocalDateTime.now();
+        Instant accessExpirationInstant = now.plusMinutes(ACCESS_TOKEN_EXPIRATION_MINUTES)
+                .atZone(ZoneId.systemDefault()).toInstant();
+        Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
                 .setSubject(user.getLogin())
                 .setExpiration(accessExpiration)
@@ -52,15 +58,17 @@ public class JwtProvider {
     }
 
     public String generateRefreshToken(@NonNull User user) {
-        final LocalDateTime now = LocalDateTime.now();
-        final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
-        final Date refreshExpiration = Date.from(refreshExpirationInstant);
+        LocalDateTime now = LocalDateTime.now();
+        Instant refreshExpirationInstant = now.plusDays(REFRESH_TOKEN_EXPIRATION_DAYS)
+                .atZone(ZoneId.systemDefault()).toInstant();
+        Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
                 .setSubject(user.getLogin())
                 .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
                 .compact();
     }
+
 
     public boolean validateAccessToken(@NonNull String accessToken) {
         return validateToken(accessToken, jwtAccessSecret);
@@ -72,10 +80,7 @@ public class JwtProvider {
 
     private boolean validateToken(@NonNull String token, @NonNull Key secret) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(secret)
-                    .build()
-                    .parseClaimsJws(token);
+            getClaims(token, secret);
             return true;
         } catch (ExpiredJwtException expEx) {
             log.error("Token expired", expEx);
@@ -106,5 +111,4 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 }

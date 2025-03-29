@@ -21,27 +21,43 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/auth/**",
+            "/form-auth/**",
+            "/login",
+            "/error",
+            "/static/**"
+    };
+
+    private static final String LOGOUT_URL = "/logout";
+    private static final String LOGOUT_SUCCESS_URL = "/form-auth/login";
+    private static final String TOKEN_COOKIE_NAME = "token";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
     private final JwtFilter jwtFilter;
 
+    private final CorsProperties corsProperties;
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/auth/**", "/form-auth/**", "/login", "/error", "/static/**").permitAll()
-                    .anyRequest().authenticated()
-            )
-            .formLogin(AbstractHttpConfigurer::disable)
-            .logout(logout -> logout
-                    .logoutUrl("/logout")
-                    .deleteCookies("token")
-                    .logoutSuccessUrl("/form-auth/login")
-            ).sessionManagement(session -> session
-                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    )
-                    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(logout -> logout
+                        .logoutUrl(LOGOUT_URL)
+                        .deleteCookies(TOKEN_COOKIE_NAME)
+                        .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -49,16 +65,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setExposedHeaders(List.of(AUTHORIZATION_HEADER));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
-
-
