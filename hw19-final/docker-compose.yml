@@ -2,6 +2,8 @@ version: '3.8'
 
 services:
   frontend:
+    environment:
+      - REACT_APP_DOCKER=true
     container_name: frontend
     build:
       context: ./front
@@ -25,6 +27,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_LIQUIBASE_ENABLED=true
+      - LIQUIBASE_CHANGELOG_CHANGE_LOG_PARAMETERS=preserveChecksum=false
+      - SPRING_LIQUIBASE_DROP_FIRST=true
     depends_on:
       db:
         condition: service_healthy
@@ -51,11 +56,10 @@ services:
       backend:
         condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:8081/auth/actuator/health" ]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 20s
     networks:
       - app-network
 
