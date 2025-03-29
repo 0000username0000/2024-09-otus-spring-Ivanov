@@ -27,7 +27,7 @@ export const createAuthorizedRequest = (data) => {
   return {
     ...data,
     userId: payload.userId,
-    username: payload.username // Добавляем username
+    username: payload.username
   };
 };
 
@@ -47,7 +47,6 @@ export const apiPost = async (url, data) => {
   }
 };
 
-// Добавляем интерцептор для автоматической подстановки токена
 axios.interceptors.request.use(config => {
   const token = localStorage.getItem('accessToken');
   if (token) {

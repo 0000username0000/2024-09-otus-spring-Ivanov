@@ -8,16 +8,14 @@ const Logout = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:8081/logout', {
+      await fetch('/logout', {
         method: 'POST',
         credentials: 'include',
       });
 
-      // Удаляем токены из localStorage
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
 
-      // Перенаправляем на страницу входа
       navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);

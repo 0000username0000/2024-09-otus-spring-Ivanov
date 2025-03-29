@@ -8,36 +8,36 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
 
-  try {
-    const response = await fetch('http://localhost:8081/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        login: username,  // Изменили с username на login
-        password: password
-      }),
-    });
+    try {
+      const response = await fetch(`/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: username,
+          password: password
+        }),
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Login failed');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
+      navigate('/');
+    } catch (err) {
+      setError(err.message || 'Invalid login or password');
+      console.error('Login error:', err);
     }
-
-    const data = await response.json();
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-    navigate('/');
-  } catch (err) {
-    setError(err.message || 'Invalid login or password');
-    console.error('Login error:', err);
-  }
-};
+  };
 
   return (
     <div className="login-container">
