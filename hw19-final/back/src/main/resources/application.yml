@@ -1,15 +1,8 @@
 spring:
-#  datasource:
-#    url: jdbc:h2:mem:testdb
-#  sql:
-#    init:
-#      mode: always
-
   datasource:
-#    url: jdbc:postgresql://db:5432/db
-    url: jdbc:postgresql://localhost:5432/db
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
 
   liquibase:
     change-log: classpath:changeLog/master.xml
@@ -29,4 +22,4 @@ logging:
     ROOT: ERROR
     liquibase: DEBUG
 
-crossOrigins: http://localhost:3000
+crossOrigins: http://frontend:3000
