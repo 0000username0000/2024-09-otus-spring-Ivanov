@@ -10,7 +10,7 @@ import ru.otus.auth.models.JwtAuthentication;
 import ru.otus.auth.services.AuthService;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("test-api")
 @RequiredArgsConstructor
 public class TestController {
 

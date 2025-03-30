@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl(LOGOUT_URL)
                         .deleteCookies(TOKEN_COOKIE_NAME)
-                        .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                        .logoutSuccessUrl("/")
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
