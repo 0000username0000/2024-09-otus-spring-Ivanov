@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.css';
+import { authFetch } from '../authFetch';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +14,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await fetch(`/auth/login`, {
+      const response = await authFetch(`/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
