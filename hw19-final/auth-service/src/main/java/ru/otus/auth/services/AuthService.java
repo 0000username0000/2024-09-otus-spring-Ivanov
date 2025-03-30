@@ -1,7 +1,6 @@
 package ru.otus.auth.services;
 
 import io.jsonwebtoken.Claims;
-import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 import ru.otus.auth.components.JwtProvider;
 import ru.otus.auth.dto.JwtRequest;
 import ru.otus.auth.dto.JwtResponse;
+import ru.otus.auth.exceptions.InvalidCredentialsException;
+import ru.otus.auth.exceptions.InvalidTokenException;
 import ru.otus.auth.models.JwtAuthentication;
 import ru.otus.auth.models.User;
 
@@ -26,29 +27,24 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) {
-        log.info("Attempting login for user: {}", authRequest.getLogin());
-
-        final User user = userService.getByLogin(authRequest.getLogin());
-        log.info("Found user: {}, password: {}", user.getLogin(), user.getPassword());
+        User user = userService.getByLogin(authRequest.getLogin());
         if (user.getPassword().equals(authRequest.getPassword())) {
-            final String accessToken = jwtProvider.generateAccessToken(user);
-            final String refreshToken = jwtProvider.generateRefreshToken(user);
+            String accessToken = jwtProvider.generateAccessToken(user);
+            String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getLogin(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         }
-
-        log.error("Password mismatch for user: {}", user.getLogin());
-        throw new RuntimeException("Неправильный пароль");
+        throw new InvalidCredentialsException("Invalid password");
     }
 
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
+            Claims claims = jwtProvider.getRefreshClaims(refreshToken);
+            String login = claims.getSubject();
+            String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final User user = userService.getByLogin(login);
-                final String accessToken = jwtProvider.generateAccessToken(user);
+                User user = userService.getByLogin(login);
+                String accessToken = jwtProvider.generateAccessToken(user);
                 return new JwtResponse(accessToken, null);
             }
         }
@@ -57,18 +53,18 @@ public class AuthService {
 
     public JwtResponse refresh(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
+            Claims claims = jwtProvider.getRefreshClaims(refreshToken);
+            String login = claims.getSubject();
+            String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final User user = userService.getByLogin(login);
-                final String accessToken = jwtProvider.generateAccessToken(user);
-                final String newRefreshToken = jwtProvider.generateRefreshToken(user);
+                User user = userService.getByLogin(login);
+                String accessToken = jwtProvider.generateAccessToken(user);
+                String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getLogin(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);
             }
         }
-        throw new RuntimeException("Невалидный JWT токен");
+        throw new InvalidTokenException("Invalid refresh token");
     }
 
     public JwtAuthentication getAuthInfo() {
