@@ -8,8 +8,8 @@ const Logout = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch('/logout', {
-        method: 'POST',
+      await fetch('/login', {
+        method: 'GET',
         credentials: 'include',
       });
 

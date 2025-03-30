@@ -8,9 +8,9 @@ import ProductDetails from "./components/ProductDetails";
 import Login from "./components/Login";
 import Logout from './components/Logout';
 
-const HomePage = ({ username }) => (
+const HomePage = () => (
   <div className="home-page">
-    <h1>Welcome, {username}!</h1>
+    <h1>Welcome!</h1>
   </div>
 );
 
