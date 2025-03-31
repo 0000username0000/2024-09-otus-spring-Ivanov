@@ -129,14 +129,26 @@ const handleSubmit = async (e) => {
         const payload = JSON.parse(atob(token.split('.')[1]));
 
         // Prepare order items data
-        const orderItemsData = formData.orderItems.map(item => {
+        const orderItemsData = formData.orderItems.map((item, index) => {
             const product = products.find(p => p.id === item.productId);
-            return {
+            const orderItem = {
                 productId: item.productId,
                 quantity: item.quantity,
                 price: product.price,
                 productName: product.name
             };
+
+            // For existing items in an edited order, include the ID
+            if (editingOrder && editingOrder.orderItems[index]?.id) {
+                orderItem.id = editingOrder.orderItems[index].id;
+            }
+
+            // For existing order, include orderId
+            if (editingOrder) {
+                orderItem.orderId = editingOrder.id;
+            }
+
+            return orderItem;
         });
 
         // Prepare the order data
@@ -144,20 +156,16 @@ const handleSubmit = async (e) => {
             status: formData.status,
             userId: payload.userId,
             totalPrice: formData.totalPrice,
-            orderItems: orderItemsData,
-            orderDate: new Date().toISOString()  // Add current date for new orders
+            orderItems: orderItemsData
         };
 
         // For existing orders, add the required fields
         if (editingOrder) {
             orderData.id = editingOrder.id;
             orderData.orderNumber = editingOrder.orderNumber;
-            // Update order items with IDs if they exist
-            orderData.orderItems = orderItemsData.map((item, index) => ({
-                ...item,
-                id: editingOrder.orderItems[index]?.id || null,
-                orderId: editingOrder.id
-            }));
+            orderData.orderDate = editingOrder.orderDate;
+        } else {
+            orderData.orderDate = new Date().toISOString();
         }
 
         let response;
