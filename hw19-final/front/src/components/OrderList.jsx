@@ -122,37 +122,70 @@ const OrderList = () => {
         });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const token = localStorage.getItem('accessToken');
-            const payload = JSON.parse(atob(token.split('.')[1]));
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        const token = localStorage.getItem('accessToken');
+        const payload = JSON.parse(atob(token.split('.')[1]));
 
-            const orderData = {
-                status: formData.status,
-                userId: payload.userId,
-                orderItems: formData.orderItems.map(item => ({
-                    productId: item.productId,
-                    quantity: item.quantity,
-                    price: item.price,
-                    productName: item.productName
-                })),
-                totalPrice: formData.totalPrice
+        // Prepare order items data
+        const orderItemsData = formData.orderItems.map(item => {
+            const product = products.find(p => p.id === item.productId);
+            return {
+                productId: item.productId,
+                quantity: item.quantity,
+                price: product.price,
+                productName: product.name
             };
+        });
 
-            const response = await axios.post('/api/orders', orderData, {
+        // Prepare the order data
+        const orderData = {
+            status: formData.status,
+            userId: payload.userId,
+            totalPrice: formData.totalPrice,
+            orderItems: orderItemsData,
+            orderDate: new Date().toISOString()  // Add current date for new orders
+        };
+
+        // For existing orders, add the required fields
+        if (editingOrder) {
+            orderData.id = editingOrder.id;
+            orderData.orderNumber = editingOrder.orderNumber;
+            // Update order items with IDs if they exist
+            orderData.orderItems = orderItemsData.map((item, index) => ({
+                ...item,
+                id: editingOrder.orderItems[index]?.id || null,
+                orderId: editingOrder.id
+            }));
+        }
+
+        let response;
+        if (editingOrder) {
+            response = await axios.put(`/api/orders/${editingOrder.id}`, orderData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
             });
-
+            setOrders(orders.map(order => order.id === editingOrder.id ? response.data : order));
+        } else {
+            response = await axios.post('/api/orders', orderData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             setOrders([...orders, response.data]);
-            setIsModalOpen(false);
-        } catch (err) {
-            setError(err.response?.data?.message || "Error creating order");
         }
-    };
+
+        setIsModalOpen(false);
+        setError(null); // Clear any previous errors
+    } catch (err) {
+        console.error('Error:', err.response?.data);
+        setError(err.response?.data?.message || err.message || "An error occurred");
+    }
+};
 
     const handleViewDetails = (orderId) => {
         navigate(`/orders/${orderId}`);
