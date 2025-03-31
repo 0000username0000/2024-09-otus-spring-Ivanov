@@ -3,15 +3,11 @@ package ru.otus.hw.components.mappers;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.models.dto.OrderDto;
-import ru.otus.hw.models.dto.OrderItemDto;
 import ru.otus.hw.models.entities.Order;
 import ru.otus.hw.models.entities.OrderItem;
 import ru.otus.hw.models.entities.User;
-import ru.otus.hw.services.OrderService;
-import ru.otus.hw.services.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
