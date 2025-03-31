@@ -58,7 +58,7 @@ public class OrderController {
     public OrderDto updateOrder(@PathVariable UUID id, @RequestBody @Validated(OnUpdate.class) OrderDto orderDto) {
         orderDto.setId(id);
         Order order = orderMapper.toEntity(orderDto, userService.findByIdNN(orderDto.getUserId()));
-        Order updatedOrder = orderService.save(order);
+        Order updatedOrder = orderService.update(order);
         return orderMapper.toDto(updatedOrder);
     }
 
