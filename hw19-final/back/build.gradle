@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version "${springDepManVersion}"
-//    id 'checkstyle'
+    id 'checkstyle'
 }
 
 group = 'ru.otus.hw'
@@ -35,10 +35,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-//checkstyle {
-//    toolVersion = '10.15.0'
-//    configFile = file("https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml")
-//}
+checkstyle {
+    toolVersion = '10.15.0'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
 
 tasks.named('test') {
     useJUnitPlatform()

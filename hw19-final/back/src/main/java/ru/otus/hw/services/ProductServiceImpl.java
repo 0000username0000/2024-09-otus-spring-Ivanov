@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findByCategoryId(UUID uuid) {
-        return productRepository.findByCategory_Id(uuid);
+        return productRepository.findByCategoryId(uuid);
     }
 
     @Override

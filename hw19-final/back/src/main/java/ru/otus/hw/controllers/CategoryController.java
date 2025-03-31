@@ -30,6 +30,7 @@ import java.util.UUID;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    
     private final CategoryMapper categoryMapper;
 
     @GetMapping
