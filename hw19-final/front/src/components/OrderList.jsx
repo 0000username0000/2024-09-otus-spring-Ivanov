@@ -20,9 +20,7 @@ const OrderList = () => {
 
     const orderStatuses = [
         { value: 'CREATED', label: 'Created' },
-        { value: 'PROCESSING', label: 'Processing' },
-        { value: 'COMPLETED', label: 'Completed' },
-        { value: 'CANCELLED', label: 'Cancelled' }
+        { value: 'APPROVED', label: 'Approved' }
     ];
 
     const getStatusDescription = (status) => {
