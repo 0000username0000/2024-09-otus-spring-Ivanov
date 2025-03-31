@@ -19,6 +19,7 @@ import ru.otus.hw.models.enums.OrderStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -43,18 +44,17 @@ public class Order implements Serializable {
     @Column(nullable = false)
     private LocalDateTime orderDate;
 
-    // Статусы: CREATED, PROCESSING, COMPLETED, CANCELLED
     @Column(nullable = false)
     private OrderStatus status;
 
-    @Column(nullable = false)
-    private double totalPrice;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<OrderItem> orderItems;

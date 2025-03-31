@@ -16,4 +16,8 @@ public interface ProductService {
     void deleteById(UUID id);
 
     List<Product> findByCategoryId(UUID uuid);
+
+    void reduceQuantity(UUID productId, int quantity);
+
+    void increaseQuantity(UUID productId, int quantity);
 }

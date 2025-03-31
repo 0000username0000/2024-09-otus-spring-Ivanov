@@ -32,7 +32,7 @@ public class OrderItem implements Serializable {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 
     @ManyToOne

@@ -2,8 +2,10 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.InsufficientStockException;
 import ru.otus.hw.models.entities.Product;
 import ru.otus.hw.repositories.ProductRepository;
 
@@ -44,5 +46,32 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findByCategoryId(UUID uuid) {
         return productRepository.findByCategory_Id(uuid);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void reduceQuantity(UUID productId, int quantity) throws InsufficientStockException {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity to reduce must be positive");
+        }
+        Product product = findByIdNN(productId);
+        if (product.getQuantity() < quantity) {
+            throw new InsufficientStockException(
+                    String.format("Insufficient stock for product %s (ID: %s). Available: %d, requested: %d",
+                            product.getName(), productId, product.getQuantity(), quantity));
+        }
+        product.setQuantity(product.getQuantity() - quantity);
+        productRepository.save(product);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void increaseQuantity(UUID productId, int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity to increase must be positive");
+        }
+        Product product = findByIdNN(productId);
+        product.setQuantity(product.getQuantity() + quantity);
+        productRepository.save(product);
     }
 }

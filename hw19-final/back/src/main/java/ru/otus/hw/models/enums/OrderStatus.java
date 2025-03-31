@@ -6,10 +6,8 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
-    CREATED("Создан"),
-    PROCESSING("В процессе"),
-    COMPLETED("Завершен"),
-    CANCELLED("Отменен");
+    CREATED("Create"),
+    APPROVED("Approved");
 
     private final String description;
 
@@ -22,15 +20,8 @@ public enum OrderStatus {
     }
 
     public boolean isProcessing() {
-        return this == PROCESSING;
+        return this == APPROVED;
     }
 
-    public boolean isCompleted() {
-        return this == COMPLETED;
-    }
-
-    public boolean isCancelled() {
-        return this == CANCELLED;
-    }
 }
 
