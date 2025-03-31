@@ -10,6 +10,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serial;
@@ -18,7 +20,9 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "order_item")
 public class OrderItem implements Serializable {
 
@@ -37,8 +41,6 @@ public class OrderItem implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private Order order;
 
     @ManyToOne

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class OrderItemController {
 
     private final OrderItemService orderItemService;
+
     private final OrderItemMapper orderItemMapper;
 
     @GetMapping
@@ -42,7 +43,7 @@ public class OrderItemController {
 
     @PutMapping("/{id}")
     public OrderItemDto updateOrderItem(@PathVariable UUID id, @RequestBody OrderItemDto orderItemDto) {
-        orderItemDto.setId(id); // Убедимся, что ID элемента заказа совпадает с ID в пути
+        orderItemDto.setId(id);
         OrderItem orderItem = orderItemMapper.toEntity(orderItemDto);
         OrderItem updatedOrderItem = orderItemService.save(orderItem);
         return orderItemMapper.toDto(updatedOrderItem);

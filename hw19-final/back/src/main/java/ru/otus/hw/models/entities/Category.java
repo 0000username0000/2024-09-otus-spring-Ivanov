@@ -34,6 +34,5 @@ public class Category implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    @ToString.Exclude
     private Set<Product> products;
 }

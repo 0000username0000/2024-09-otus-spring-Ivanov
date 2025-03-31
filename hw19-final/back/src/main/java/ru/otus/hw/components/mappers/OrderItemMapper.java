@@ -12,14 +12,16 @@ public class OrderItemMapper {
 
     private final ProductService productService;
 
-    public OrderItemDto toDto(OrderItem orderItem) {
+    public OrderItemDto toDto(OrderItem item) {
         OrderItemDto dto = new OrderItemDto();
-        dto.setId(orderItem.getId());
-        dto.setQuantity(orderItem.getQuantity());
-        dto.setPrice(orderItem.getPrice());
-        dto.setOrderId(orderItem.getOrder().getId());
-        dto.setProductId(orderItem.getProduct().getId());
-        dto.setProductName(orderItem.getProduct().getName());
+        dto.setId(item.getId());
+        dto.setQuantity(item.getQuantity());
+        dto.setPrice(item.getPrice());
+        dto.setOrderId(item.getOrder().getId());
+        dto.setProductId(item.getProduct().getId());
+        if (item.getProduct() != null) {
+            dto.setProductName(item.getProduct().getName());
+        }
         return dto;
     }
 
@@ -27,8 +29,8 @@ public class OrderItemMapper {
         OrderItem orderItem = new OrderItem();
         orderItem.setId(dto.getId());
         orderItem.setQuantity(dto.getQuantity());
-        orderItem.setPrice(dto.getPrice());
         orderItem.setProduct(productService.findByIdNN(dto.getProductId()));
+        orderItem.setPrice(dto.getPrice());
         return orderItem;
     }
 }

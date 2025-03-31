@@ -14,6 +14,8 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import ru.otus.hw.models.enums.OrderStatus;
 
@@ -27,7 +29,9 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "orders")
 public class Order implements Serializable {
 
@@ -55,8 +59,6 @@ public class Order implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private Set<OrderItem> orderItems;
 
     @PrePersist
