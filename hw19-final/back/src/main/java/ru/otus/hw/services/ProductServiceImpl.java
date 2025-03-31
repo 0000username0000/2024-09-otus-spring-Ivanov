@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.components.mappers.ProductMapper;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.exceptions.InsufficientStockException;
+import ru.otus.hw.models.dto.ProductDto;
+import ru.otus.hw.models.entities.Category;
 import ru.otus.hw.models.entities.Product;
 import ru.otus.hw.repositories.ProductRepository;
 
@@ -17,6 +20,10 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+
+    private final CategoryService categoryService;
+
+    private final ProductMapper productMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -33,7 +40,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product save(Product product) {
+    public Product save(ProductDto productDto) {
+        Category category = categoryService.findByIdNN(productDto.getCategoryId());
+        Product product = productMapper.toEntity(productDto, category);
         return productRepository.save(product);
     }
 
@@ -73,5 +82,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = findByIdNN(productId);
         product.setQuantity(product.getQuantity() + quantity);
         productRepository.save(product);
+    }
+
+    @Override
+    public ProductDto toDto(Product product) {
+        return productMapper.toDto(product);
     }
 }

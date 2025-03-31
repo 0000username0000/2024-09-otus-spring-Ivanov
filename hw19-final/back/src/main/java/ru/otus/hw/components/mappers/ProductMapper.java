@@ -1,37 +1,32 @@
 package ru.otus.hw.components.mappers;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.models.dto.ProductDto;
 import ru.otus.hw.models.entities.Product;
-import ru.otus.hw.services.CategoryService;
-import ru.otus.hw.services.ProductService;
+import ru.otus.hw.models.entities.Category;
 
 @Component
-@AllArgsConstructor
 public class ProductMapper {
 
-    private final CategoryService categoryService;
-
     public ProductDto toDto(Product product) {
-        ProductDto dto = new ProductDto();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setQuantity(product.getQuantity());
-        dto.setCategoryId(product.getCategory().getId());
-        return dto;
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getQuantity(),
+                product.getCategory() != null ? product.getCategory().getId() : null
+        );
     }
 
-    public Product toEntity(ProductDto dto) {
+    public Product toEntity(ProductDto dto, Category category) {
         Product product = new Product();
         product.setId(dto.getId());
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setQuantity(dto.getQuantity());
-        product.setCategory(categoryService.findByIdNN(dto.getCategoryId()));
+        product.setCategory(category);
         return product;
     }
 }

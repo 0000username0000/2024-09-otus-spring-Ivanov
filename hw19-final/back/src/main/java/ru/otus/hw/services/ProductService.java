@@ -1,5 +1,6 @@
 package ru.otus.hw.services;
 
+import ru.otus.hw.models.dto.ProductDto;
 import ru.otus.hw.models.entities.Product;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface ProductService {
 
     Product findByIdNN(UUID id);
 
-    Product save(Product product);
+    Product save(ProductDto productDto);
 
     void deleteById(UUID id);
 
@@ -20,4 +21,6 @@ public interface ProductService {
     void reduceQuantity(UUID productId, int quantity);
 
     void increaseQuantity(UUID productId, int quantity);
+
+    ProductDto toDto(Product product);
 }

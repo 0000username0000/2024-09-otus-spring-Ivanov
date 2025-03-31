@@ -5,8 +5,8 @@ import "./table.css";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState({ name: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -29,20 +29,21 @@ const CategoryList = () => {
     }
   };
 
-  const handleViewProducts = (categoryId) => {
-    navigate(`/categories/${categoryId}/products`);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleCreateCategory = async () => {
-    if (!newCategoryName.trim()) {
+    if (!formData.name.trim()) {
       setError("Category name cannot be empty");
       return;
     }
 
     setIsLoading(true);
     try {
-      await axios.post("/api/categories", { name: newCategoryName });
-      setNewCategoryName("");
+      await axios.post("/api/categories", { name: formData.name });
+      setFormData({ name: "" });
       setError("");
       await fetchCategories();
     } catch (error) {
@@ -54,32 +55,34 @@ const CategoryList = () => {
   };
 
   const handleStartEdit = (category) => {
-    setEditingCategory(category);
-    setNewCategoryName(category.name);
+    setEditingId(category.id);
+    setFormData({ name: category.name });
   };
 
-  const handleUpdateCategory = async () => {
-    if (!newCategoryName.trim()) {
-      setError("Category name cannot be empty");
-      return;
-    }
+const handleUpdateCategory = async () => {
+  if (!formData.name.trim()) {
+    setError("Category name cannot be empty");
+    return;
+  }
 
-    setIsLoading(true);
-    try {
-      await axios.put(`/api/categories/${editingCategory.id}`, {
-        name: newCategoryName
-      });
-      setEditingCategory(null);
-      setNewCategoryName("");
-      setError("");
-      await fetchCategories();
-    } catch (error) {
-      console.error("Error updating category:", error);
-      setError(error.response?.data?.message || "Error updating category");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  setIsLoading(true);
+  try {
+    await axios.put(`/api/categories/${editingId}`, {
+      id: editingId,  // Добавляем ID в тело запроса
+      name: formData.name,
+      productCount: 0  // Добавляем обязательное поле
+    });
+    setEditingId(null);
+    setFormData({ name: "" });
+    setError("");
+    await fetchCategories();
+  } catch (error) {
+    console.error("Error updating category:", error);
+    setError(error.response?.data || "Error updating category");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleDeleteCategory = async (categoryId) => {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
@@ -90,25 +93,15 @@ const CategoryList = () => {
       await fetchCategories();
     } catch (error) {
       console.error("Error deleting category:", error);
-      if (error.response) {
-        if (error.response.status === 400) {
-          setError(error.response.data?.message || "Cannot delete category with existing products");
-        } else if (error.response.status === 404) {
-          setError("Category not found");
-        } else {
-          setError(`Server error: ${error.response.status}`);
-        }
-      } else {
-        setError("Network error - could not connect to server");
-      }
+      setError(error.response?.data?.message || "Error deleting category");
     } finally {
       setIsLoading(false);
     }
   };
 
   const cancelEdit = () => {
-    setEditingCategory(null);
-    setNewCategoryName("");
+    setEditingId(null);
+    setFormData({ name: "" });
     setError("");
   };
 
@@ -120,32 +113,24 @@ const CategoryList = () => {
       <div className="category-form">
         <input
           type="text"
-          value={newCategoryName}
-          onChange={(e) => setNewCategoryName(e.target.value)}
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
           placeholder="Category name"
           disabled={isLoading}
         />
 
-        {editingCategory ? (
+        {editingId ? (
           <div className="form-actions">
-            <button
-              onClick={handleUpdateCategory}
-              disabled={isLoading}
-            >
+            <button onClick={handleUpdateCategory} disabled={isLoading}>
               {isLoading ? "Updating..." : "Update Category"}
             </button>
-            <button
-              onClick={cancelEdit}
-              disabled={isLoading}
-            >
+            <button onClick={cancelEdit} disabled={isLoading}>
               Cancel
             </button>
           </div>
         ) : (
-          <button
-            onClick={handleCreateCategory}
-            disabled={isLoading}
-          >
+          <button onClick={handleCreateCategory} disabled={isLoading}>
             {isLoading ? "Adding..." : "Add Category"}
           </button>
         )}
@@ -161,6 +146,7 @@ const CategoryList = () => {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Product Count</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -168,29 +154,21 @@ const CategoryList = () => {
             {categories.map((category) => (
               <tr key={category.id}>
                 <td>{category.name}</td>
+                <td>{category.productCount}</td>
                 <td className="actions">
-                  <button
-                    onClick={() => handleViewProducts(category.id)}
-                    disabled={isLoading}
-                  >
+                  <button onClick={() => navigate(`/categories/${category.id}/products`)}>
                     View Products
                   </button>
-                  <button
-                    onClick={() => handleStartEdit(category)}
-                    disabled={isLoading}
-                  >
+                  <button onClick={() => handleStartEdit(category)}>
                     Edit
                   </button>
-                  {category.productCount > 0 ? (
-                    <span/>
-                  ) : (
-                    <button
-                      onClick={() => handleDeleteCategory(category.id)}
-                      disabled={isLoading}
-                    >
-                      Delete
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleDeleteCategory(category.id)}
+                    disabled={category.productCount > 0}
+                    title={category.productCount > 0 ? "Cannot delete category with products" : ""}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
