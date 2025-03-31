@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.exceptions.EntityNotFoundException;
-import ru.otus.hw.exceptions.InsufficientStockException;
 import ru.otus.hw.models.entities.Order;
 import ru.otus.hw.models.entities.OrderItem;
 import ru.otus.hw.repositories.OrderRepository;
