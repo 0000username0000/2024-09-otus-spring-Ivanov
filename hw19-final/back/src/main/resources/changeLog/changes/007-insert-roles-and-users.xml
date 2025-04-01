@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="4" author="Artem">
+        <insert tableName="roles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440000"/>
+            <column name="name" value="ADMIN"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
+            <column name="name" value="MANAGER"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440002"/>
+            <column name="name" value="CLIENT"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="450e8400-e29b-41d4-a716-446655440000"/>
+            <column name="username" value="admin"/>
+            <column name="password" value="password"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="450e8400-e29b-41d4-a716-446655440001"/>
+            <column name="username" value="manager"/>
+            <column name="password" value="password"/>
+        </insert>
+        <insert tableName="users">
+            <column name="id" value="450e8400-e29b-41d4-a716-446655440002"/>
+            <column name="username" value="client"/>
+            <column name="password" value="password"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="450e8400-e29b-41d4-a716-446655440000"/>
+            <column name="role_id" value="550e8400-e29b-41d4-a716-446655440000"/>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_id" value="450e8400-e29b-41d4-a716-446655440001"/>
+            <column name="role_id" value="550e8400-e29b-41d4-a716-446655440001"/>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_id" value="450e8400-e29b-41d4-a716-446655440002"/>
+            <column name="role_id" value="550e8400-e29b-41d4-a716-446655440002"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
