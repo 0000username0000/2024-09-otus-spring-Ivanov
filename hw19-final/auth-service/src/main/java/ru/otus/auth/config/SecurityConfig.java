@@ -28,8 +28,7 @@ public class SecurityConfig {
             "/form-auth/**",
             "/login",
             "/error",
-            "/static/**",
-            "api/**"
+            "/static/**"
     };
 
     private static final String LOGOUT_URL = "/logout";

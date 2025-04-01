@@ -24,7 +24,7 @@ const AdminPanel = () => {
                 return;
             }
 
-            const response = await axios.get(`${API_BASE_URL}/api/admin/users`, {
+            const response = await axios.get(`${API_BASE_URL}/auth/admin/users`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -45,7 +45,7 @@ const AdminPanel = () => {
         try {
             const token = localStorage.getItem('accessToken');
             await axios.put(
-                `${API_BASE_URL}/api/admin/users/${editingUser.id}`,
+                `${API_BASE_URL}/auth/admin/users/${editingUser.id}`,
                 editingUser,
                 {
                     headers: {
@@ -64,7 +64,7 @@ const AdminPanel = () => {
     const handleDelete = async (userId) => {
         try {
             const token = localStorage.getItem('accessToken');
-            await axios.delete(`${API_BASE_URL}/api/admin/users/${userId}`, {
+            await axios.delete(`${API_BASE_URL}/auth/admin/users/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
