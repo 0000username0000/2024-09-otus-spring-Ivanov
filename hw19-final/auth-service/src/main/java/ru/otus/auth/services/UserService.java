@@ -1,6 +1,7 @@
 package ru.otus.auth.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.otus.auth.exceptions.EntityNotFoundException;
 import ru.otus.auth.models.User;
@@ -12,8 +13,17 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User getByLogin(String login) {
+    private final PasswordEncoder passwordEncoder;
+
+    public User getByLoginNN(String login) {
         return userRepository.findByLogin(login)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("User not found: %s", login)));
+    }
+
+
+    public boolean validatePassword(String rawPassword, String encodedPassword) {
+        System.out.println(rawPassword);
+        System.out.println(encodedPassword);
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }

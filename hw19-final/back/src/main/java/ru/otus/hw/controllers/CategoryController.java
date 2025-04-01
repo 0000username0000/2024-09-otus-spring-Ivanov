@@ -1,6 +1,7 @@
 package ru.otus.hw.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +24,7 @@ import ru.otus.hw.services.CategoryService;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ import java.util.UUID;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    
+
     private final CategoryMapper categoryMapper;
 
     @GetMapping
@@ -48,6 +50,7 @@ public class CategoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto createCategory(@RequestBody @Validated(OnCreate.class) CategoryDto categoryDto) {
+        log.info("Creating category with name: {}", categoryDto.getName());
         Category category = new Category();
         category.setName(categoryDto.getName());
         return categoryMapper.toDto(categoryService.save(category));

@@ -2,7 +2,6 @@ package ru.otus.auth.services;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import ru.otus.auth.models.User;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -27,14 +25,16 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) {
-        User user = userService.getByLogin(authRequest.getLogin());
-        if (user.getPassword().equals(authRequest.getPassword())) {
-            String accessToken = jwtProvider.generateAccessToken(user);
-            String refreshToken = jwtProvider.generateRefreshToken(user);
-            refreshStorage.put(user.getLogin(), refreshToken);
-            return new JwtResponse(accessToken, refreshToken);
+        User user = userService.getByLoginNN(authRequest.getLogin());
+        System.out.println(authRequest.getPassword());
+        System.out.println(user.getPassword());
+        if (!userService.validatePassword(authRequest.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid password");
         }
-        throw new InvalidCredentialsException("Invalid password");
+        String accessToken = jwtProvider.generateAccessToken(user);
+        String refreshToken = jwtProvider.generateRefreshToken(user);
+        refreshStorage.put(user.getLogin(), refreshToken);
+        return new JwtResponse(accessToken, refreshToken);
     }
 
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
@@ -43,7 +43,7 @@ public class AuthService {
             String login = claims.getSubject();
             String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                User user = userService.getByLogin(login);
+                User user = userService.getByLoginNN(login);
                 String accessToken = jwtProvider.generateAccessToken(user);
                 return new JwtResponse(accessToken, null);
             }
@@ -57,7 +57,7 @@ public class AuthService {
             String login = claims.getSubject();
             String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                User user = userService.getByLogin(login);
+                User user = userService.getByLoginNN(login);
                 String accessToken = jwtProvider.generateAccessToken(user);
                 String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getLogin(), newRefreshToken);
@@ -70,5 +70,9 @@ public class AuthService {
     public JwtAuthentication getAuthInfo() {
         return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
     }
+
+//    public User register(String login, String password) {
+//        return userService.createUser(login, password);
+//    }
 
 }
