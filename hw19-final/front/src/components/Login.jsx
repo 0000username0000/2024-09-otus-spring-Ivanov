@@ -33,7 +33,7 @@ const Login = () => {
       const data = await response.json();
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
-      navigate('/');
+      window.location.href = '/';
     } catch (err) {
       setError(err.message || 'Invalid login or password');
       console.error('Login error:', err);

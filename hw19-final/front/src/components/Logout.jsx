@@ -15,8 +15,7 @@ const Logout = () => {
 
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-
-      navigate('/login');
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
     }
