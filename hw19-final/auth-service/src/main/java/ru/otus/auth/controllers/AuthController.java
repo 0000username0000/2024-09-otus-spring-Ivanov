@@ -2,13 +2,16 @@ package ru.otus.auth.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.auth.dto.JwtRequest;
 import ru.otus.auth.dto.JwtResponse;
 import ru.otus.auth.dto.RefreshJwtRequest;
+import ru.otus.auth.dto.UserInfoResponse;
 import ru.otus.auth.services.AuthService;
 
 @RestController
@@ -36,4 +39,10 @@ public class AuthController {
         return ResponseEntity.ok(token);
     }
 
+
+    @GetMapping("/user-info")
+    public ResponseEntity<UserInfoResponse> getUserInfo(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        return ResponseEntity.ok(authService.getUserInfo(token));
+    }
 }

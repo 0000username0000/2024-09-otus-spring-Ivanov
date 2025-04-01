@@ -1,27 +1,14 @@
 package ru.otus.auth.services;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.otus.auth.exceptions.EntityNotFoundException;
 import ru.otus.auth.models.Role;
-import ru.otus.auth.repository.RoleRepository;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Service
-@AllArgsConstructor
-public class RoleService {
+public interface RoleService {
 
-    private final RoleRepository roleRepository;
+    Role findByNameNN(String name);
 
-    public Role findByNameNN(String name) {
-        return roleRepository.findByName(name).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Role not found: %s", name)));
-    }
-
-    public Set<Role> findAllByNameIn(List<String> roleNames) {
-        return new HashSet<>(roleRepository.findAllByNameIn(roleNames));
-    }
+    Set<Role> findAllByNameIn(List<String> roleNames);
 }
+

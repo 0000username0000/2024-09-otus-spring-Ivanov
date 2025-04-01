@@ -13,4 +13,5 @@ public class JwtResponse {
 
     private String refreshToken;
 
+    private Boolean isAdmin;
 }
