@@ -53,7 +53,7 @@ const ProductList = () => {
 
   // Обработчик удаления продукта
   const handleDeleteProduct = (productId) => {
-    axios.delete(`h/api/products/${productId}`)
+    axios.delete(`/api/products/${productId}`)
       .then(() => {
         setProducts(products.filter((p) => p.id !== productId));
       })
