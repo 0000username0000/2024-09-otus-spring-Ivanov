@@ -77,7 +77,7 @@
         <insert tableName="users">
             <column name="id" value="33333333-3333-3333-3333-333333333333"/>
             <column name="login" value="anton"/>
-            <column name="password" value="$2a$10$WQyJN6W9UQn8VcZG5Xe3E.9gYJQ6z1Jd7Y4W7bLQ3Lk9Q1QwDqK"/>
+            <column name="password" value="$2a$12$e5P4.u.yGKTCWxaBGQ9nxeFjxL2e1vIj7BIi2TpDNSaJoZRKXf9za"/>
             <column name="first_name" value="Антон"/>
             <column name="last_name" value="Иванов"/>
         </insert>
@@ -90,8 +90,8 @@
         <insert tableName="users">
             <column name="id" value="44444444-4444-4444-4444-444444444444"/>
             <column name="login" value="ivan"/>
-            <column name="password" value="$2a$10$N9qo8uLOickgx2ZMRZoMy.MrYV7X6o7z1d7Y4W7bLQ3Lk9Q1QwDqK"/>
-            <column name="first_name" value="Сергей"/>
+            <column name="password" value="$2a$12$e5P4.u.yGKTCWxaBGQ9nxeFjxL2e1vIj7BIi2TpDNSaJoZRKXf9za"/>
+            <column name="first_name" value="Иван"/>
             <column name="last_name" value="Петров"/>
         </insert>
 
