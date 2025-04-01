@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.components.mappers.CategoryMapper;
 import ru.otus.hw.config.TestValidationConfig;
-import ru.otus.hw.config.ValidationConfig;
 import ru.otus.hw.exceptions.GlobalExceptionHandler;
 import ru.otus.hw.models.dto.CategoryDto;
 import ru.otus.hw.models.entities.Category;
@@ -20,8 +19,12 @@ import ru.otus.hw.services.CategoryService;
 import java.util.List;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,6 +43,7 @@ class CategoryControllerTest {
     private CategoryMapper categoryMapper;
 
     private final UUID testId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+
     private final String testName = "Test Category";
 
     @Test
@@ -69,17 +73,6 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("$.name", is("Updated Name")));
     }
 
-//    @Test
-//    @DisplayName("Валидация при создании - имя не должно быть пустым")
-//    void shouldValidateCreateRequest() throws Exception {
-//        mvc.perform(post("/api/categories")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{\"name\":\"\"}"))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.errors").exists())
-//                .andExpect(jsonPath("$.errors[0].field").exists())
-//                .andExpect(jsonPath("$.errors[0].message").exists());
-//    }
 
     @Test
     @DisplayName("Получение всех категорий")

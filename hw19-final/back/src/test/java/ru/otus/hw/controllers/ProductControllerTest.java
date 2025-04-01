@@ -19,9 +19,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
 @Import({TestValidationConfig.class, GlobalExceptionHandler.class})
@@ -35,7 +40,9 @@ class ProductControllerTest {
     private ProductService productService;
 
     private final UUID testId = UUID.randomUUID();
+
     private final UUID categoryId = UUID.randomUUID();
+
     private final ProductDto testDto = new ProductDto(
             testId,
             "Test Product",
@@ -152,47 +159,4 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].categoryId", is(categoryId.toString())));
     }
-
-//    @Test
-//    @DisplayName("Валидация при создании - имя не должно быть пустым")
-//    void shouldValidateCreateRequest() throws Exception {
-//        String invalidRequestBody = """
-//                {
-//                    "name": "",
-//                    "description": "Test",
-//                    "price": 100,
-//                    "quantity": 1,
-//                    "categoryId": "%s"
-//                }
-//                """.formatted(categoryId);
-//
-//        mvc.perform(post("/api/products")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(invalidRequestBody))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.errors").exists())
-//                .andExpect(jsonPath("$.errors[0].field").value("name"));
-//    }
-//
-//    @Test
-//    @DisplayName("Валидация при обновлении - цена не должна быть null")
-//    void shouldValidateUpdateRequest() throws Exception {
-//        String invalidRequestBody = """
-//                {
-//                    "id": "%s",
-//                    "name": "Test",
-//                    "description": "Test",
-//                    "price": null,
-//                    "quantity": 1,
-//                    "categoryId": "%s"
-//                }
-//                """.formatted(testId, categoryId);
-//
-//        mvc.perform(put("/api/products/{id}", testId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(invalidRequestBody))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.errors").exists())
-//                .andExpect(jsonPath("$.errors[0].field").value("price"));
-//    }
 }
