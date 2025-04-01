@@ -31,8 +31,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse login(@NonNull JwtRequest authRequest) {
         User user = userService.getByLoginNN(authRequest.getLogin());
-        System.out.println(authRequest.getPassword());
-        System.out.println(user.getPassword());
         if (!userService.validatePassword(authRequest.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid password");
         }

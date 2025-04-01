@@ -1,5 +1,6 @@
 package ru.otus.hw.controllers;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class CategoryController {
     public List<CategoryDto> getAllCategories() {
         return categoryService.findAll().stream()
                 .map(categoryMapper::toDto)
-                .toList(); // Java 16+ сокращение вместо collect(Collectors.toList())
+                .toList();
     }
 
     @GetMapping("/{id}")

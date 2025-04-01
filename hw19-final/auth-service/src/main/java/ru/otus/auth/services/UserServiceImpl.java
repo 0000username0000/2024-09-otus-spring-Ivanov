@@ -28,8 +28,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean validatePassword(String rawPassword, String encodedPassword) {
-        System.out.println(rawPassword);
-        System.out.println(encodedPassword);
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 

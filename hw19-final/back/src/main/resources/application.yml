@@ -23,3 +23,9 @@ logging:
     liquibase: DEBUG
 
 crossOrigins: http://frontend:3000
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
